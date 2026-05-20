@@ -8,6 +8,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,8 +18,10 @@ public class InputHandler {
     private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
     private final ExecutorService inputProcessor = Executors.newSingleThreadExecutor();
+    private final Consumer<Input> onInput;
 
-    public InputHandler() {
+    public InputHandler(Consumer<Input> onInput) {
+        this.onInput = onInput;
         keyListener = new KeyListener(inputQueue::offer);
         serialInputListener = new SerialListener("COM3", 115200, this::handleSerialLine);
     }
@@ -50,17 +53,11 @@ public class InputHandler {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Input input = inputQueue.take();
-                onInput(input);
+                onInput.accept(input);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    private void onInput(Input input) {
-        System.out.println(input.source());
-        System.out.println(input.state());
-        System.out.println(input.key());
     }
 
     private void startGlobalScreen() {
