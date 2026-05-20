@@ -43,7 +43,5 @@ public class Main extends Application {
     @Override
     public void stop() {
         inputHandler.stop();
-
-        System.exit(0);
     }
 }

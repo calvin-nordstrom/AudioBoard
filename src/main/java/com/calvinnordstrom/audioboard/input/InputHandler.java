@@ -14,12 +14,13 @@ import java.util.logging.Logger;
 public class InputHandler {
     private final KeyListener keyListener;
     private final SerialListener serialInputListener;
+    private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
     private final ExecutorService inputProcessor = Executors.newSingleThreadExecutor();
 
     public InputHandler() {
-        keyListener = new KeyListener(this::enqueue);
-        serialInputListener = new SerialListener("COM3", 115200, this::enqueue);
+        keyListener = new KeyListener(inputQueue::offer);
+        serialInputListener = new SerialListener("COM3", 115200, this::handleSerialLine);
     }
 
     public void start() {
@@ -28,9 +29,7 @@ public class InputHandler {
         GlobalScreen.addNativeKeyListener(keyListener);
         serialInputListener.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::stop));
-
-        startProcessingLoop();
+        inputProcessor.submit(this::processLoop);
     }
 
     public void stop() {
@@ -40,27 +39,28 @@ public class InputHandler {
         inputProcessor.shutdownNow();
     }
 
-    private void startProcessingLoop() {
-        inputProcessor.submit(() -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                try {
-                    Input input = inputQueue.take();
-                    onInput(input);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        });
+    private void handleSerialLine(String line) {
+        Input input = decoder.decode(line);
+        if (input != null) {
+            inputQueue.offer(input);
+        }
     }
 
-    private void enqueue(Input input) {
-        inputQueue.offer(input);
+    private void processLoop() {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                Input input = inputQueue.take();
+                onInput(input);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     private void onInput(Input input) {
-        System.out.println(input.getType());
-        System.out.println(input.getState());
-        System.out.println(input.getKey());
+        System.out.println(input.source());
+        System.out.println(input.state());
+        System.out.println(input.key());
     }
 
     private void startGlobalScreen() {
