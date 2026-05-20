@@ -17,7 +17,11 @@ public class InputHandler {
     private final SerialListener serialInputListener;
     private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService inputProcessor = Executors.newSingleThreadExecutor();
+    private final ExecutorService inputProcessor = Executors.newSingleThreadExecutor(r -> {
+        Thread thread = new Thread(r);
+        thread.setName("AudioBoard Input Thread");
+        return thread;
+    });
     private final Consumer<Input> onInput;
 
     public InputHandler(Consumer<Input> onInput) {
