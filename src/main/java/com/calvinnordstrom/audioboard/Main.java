@@ -1,5 +1,6 @@
 package com.calvinnordstrom.audioboard;
 
+import com.calvinnordstrom.audioboard.input.InputHandler;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -9,17 +10,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class Main extends Application {
+    public static final Logger LOGGER = Logger.getLogger(Main.class.getPackageName());
     private static final String TITLE = "AudioBoard";
     private static final String VERSION = "0.1.0";
     private static final double WIDTH = 960;
     private static final double HEIGHT = 540;
     private static final double MIN_WIDTH = 640;
     private static final double MIN_HEIGHT = 360;
+    private final InputHandler inputHandler = new InputHandler();
 
     @Override
     public void start(Stage stage) {
+        inputHandler.start();
+
         Node root = new BorderPane();
         Scene scene = new Scene((Parent) root);
         scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("styles.css")).toExternalForm());
@@ -36,6 +42,8 @@ public class Main extends Application {
 
     @Override
     public void stop() {
+        inputHandler.stop();
+
         System.exit(0);
     }
 }

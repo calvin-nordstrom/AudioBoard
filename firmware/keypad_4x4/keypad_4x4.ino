@@ -15,15 +15,38 @@ byte colPins[COLS] = {8,9,10,16};
 
 Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
 
+void sendEvent(char source, char event, char key) {
+  Serial.print(source);
+  Serial.print(event);
+  Serial.println(key);
+}
+
 void setup() {
   Serial.begin(115200);
   delay(2000);
 }
 
 void loop() {
-  char key = keypad.getKey();
+  if (keypad.getKeys()) {
+    for (int i = 0; i < LIST_MAX; i++) {
+      if (!keypad.key[i].stateChanged) {
+        continue;
+      }
 
-  if (key) {
-    Serial.println(key);
+      char event;
+
+      switch (keypad.key[i].kstate) {
+        case PRESSED:
+          event = 'P';
+          break;
+        case RELEASED:
+          event = 'R';
+          break;
+        default:
+          continue;
+      }
+
+      sendEvent('K', event, keypad.key[i].kchar);
+    }
   }
 }
