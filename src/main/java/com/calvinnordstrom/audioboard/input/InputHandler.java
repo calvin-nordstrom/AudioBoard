@@ -26,7 +26,7 @@ public class InputHandler {
 
     public InputHandler(Consumer<Input> onInput) {
         this.onInput = onInput;
-        keyListener = new KeyListener(inputQueue::offer);
+        keyListener = new KeyListener(this::handleKeyInput);
         serialInputListener = new SerialListener("COM3", 115200, this::handleSerialLine);
     }
 
@@ -44,6 +44,10 @@ public class InputHandler {
 
         serialInputListener.stop();
         inputProcessor.shutdownNow();
+    }
+
+    private void handleKeyInput(Input input) {
+        inputQueue.offer(input);
     }
 
     private void handleSerialLine(String line) {
