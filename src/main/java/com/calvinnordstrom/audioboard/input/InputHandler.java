@@ -17,7 +17,7 @@ public class InputHandler {
     private final SerialListener serialInputListener;
     private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService inputProcessor = Executors.newSingleThreadExecutor(r -> {
+    private final ExecutorService inputThread = Executors.newSingleThreadExecutor(r -> {
         Thread thread = new Thread(r);
         thread.setName("AudioBoard Input Thread");
         return thread;
@@ -32,18 +32,17 @@ public class InputHandler {
 
     public void start() {
         startGlobalScreen();
-
         GlobalScreen.addNativeKeyListener(keyListener);
         serialInputListener.start();
 
-        inputProcessor.submit(this::processLoop);
+        inputThread.submit(this::processLoop);
     }
 
     public void stop() {
         stopGlobalScreen();
-
         serialInputListener.stop();
-        inputProcessor.shutdownNow();
+
+        inputThread.shutdownNow();
     }
 
     private void handleKeyInput(Input input) {
