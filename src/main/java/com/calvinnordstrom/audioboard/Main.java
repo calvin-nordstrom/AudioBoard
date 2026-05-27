@@ -1,6 +1,8 @@
 package com.calvinnordstrom.audioboard;
 
+import com.calvinnordstrom.audioboard.audio.AudioEngine;
 import com.calvinnordstrom.audioboard.input.InputHandler;
+import com.calvinnordstrom.audioboard.input.InputRouter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -20,10 +22,20 @@ public class Main extends Application {
     private static final double HEIGHT = 540;
     private static final double MIN_WIDTH = 640;
     private static final double MIN_HEIGHT = 360;
-    private final InputHandler inputHandler = new InputHandler();
+    private AudioEngine audioEngine;
+    private InputRouter inputRouter;
+    private InputHandler inputHandler;
+
+    @Override
+    public void init() {
+        audioEngine = new AudioEngine();
+        inputRouter = new InputRouter(audioEngine::submit);
+        inputHandler = new InputHandler(inputRouter::route);
+    }
 
     @Override
     public void start(Stage stage) {
+        audioEngine.start();
         inputHandler.start();
 
         Node root = new BorderPane();
@@ -42,6 +54,7 @@ public class Main extends Application {
 
     @Override
     public void stop() {
+        audioEngine.stop();
         inputHandler.stop();
     }
 }
