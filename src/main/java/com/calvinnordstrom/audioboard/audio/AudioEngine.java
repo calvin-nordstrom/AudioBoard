@@ -37,13 +37,15 @@ public class AudioEngine {
     }
 
     private void handleCommand(AudioCommand command) {
-        if (command instanceof PlaySampleCommand play) {
+        if (command instanceof PlaySampleCommand(Sound sound)) {
+            System.out.println(sound);
+
             playSample();
         }
     }
 
     private void playSample() {
-        System.out.println(Thread.currentThread().getName() + ": Playing sample");
+//        System.out.println(Thread.currentThread().getName() + ": Playing sample");
 
         // future:
         // allocate voice
