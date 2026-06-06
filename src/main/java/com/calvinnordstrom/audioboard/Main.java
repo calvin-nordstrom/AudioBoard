@@ -1,6 +1,7 @@
 package com.calvinnordstrom.audioboard;
 
 import com.calvinnordstrom.audioboard.audio.AudioEngine;
+import com.calvinnordstrom.audioboard.audio.AudioUtils;
 import com.calvinnordstrom.audioboard.input.InputHandler;
 import com.calvinnordstrom.audioboard.input.InputRouter;
 import javafx.application.Application;
@@ -28,7 +29,10 @@ public class Main extends Application {
 
     @Override
     public void init() {
-        audioEngine = new AudioEngine();
+        audioEngine = new AudioEngine(
+                AudioUtils.getDefaultTarget(),
+                AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
+        );
         inputRouter = new InputRouter(audioEngine::submit);
         inputHandler = new InputHandler(inputRouter::route);
     }

@@ -1,5 +1,7 @@
 package com.calvinnordstrom.audioboard.audio;
 
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,12 +14,21 @@ public class AudioEngine {
         thread.setName("AudioBoard Audio Command Thread");
         return thread;
     });
+    private final AudioRouter router;
+
+    public AudioEngine(TargetDataLine mic, SourceDataLine out) {
+        router = new AudioRouter(mic, out);
+    }
 
     public void start() {
+        router.start();
+
         commandThread.submit(this::processLoop);
     }
 
     public void stop() {
+        router.stop();
+
         commandThread.shutdownNow();
     }
 
@@ -28,28 +39,13 @@ public class AudioEngine {
     private void processLoop() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                AudioCommand command = commandQueue.take();
-                handleCommand(command);
+                AudioCommand cmd = commandQueue.take();
+                if (cmd instanceof PlaySampleCommand p) {
+                    router.injectAudio(p.sound(), 1.0F);
+                }
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                return;
             }
         }
-    }
-
-    private void handleCommand(AudioCommand command) {
-        if (command instanceof PlaySampleCommand(Sound sound)) {
-            System.out.println(sound);
-
-            playSample();
-        }
-    }
-
-    private void playSample() {
-//        System.out.println(Thread.currentThread().getName() + ": Playing sample");
-
-        // future:
-        // allocate voice
-        // schedule playback
-        // mix into output
     }
 }

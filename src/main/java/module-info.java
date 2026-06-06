@@ -5,6 +5,7 @@ module com.calvinnordstrom.audioboard {
     requires com.fazecast.jSerialComm;
     requires jnativehook;
     requires java.logging;
+    requires java.desktop;
 
 
     opens com.calvinnordstrom.audioboard to javafx.fxml;
