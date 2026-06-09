@@ -65,7 +65,9 @@ public class AudioMixer {
         outputLine.stop();
         outputLine.close();
 
-        mixerThread.shutdownNow();
+        if (mixerThread != null) {
+            mixerThread.shutdownNow();
+        }
     }
 
     public PlayingSound addSound(Sound sound, float volume) {
