@@ -35,7 +35,7 @@ public class InputHandler {
         GlobalScreen.addNativeKeyListener(keyListener);
         serialInputListener.start();
 
-        inputThread.submit(this::processLoop);
+        inputThread.submit(this::inputLoop);
     }
 
     public void stop() {
@@ -56,7 +56,7 @@ public class InputHandler {
         }
     }
 
-    private void processLoop() {
+    private void inputLoop() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Input input = inputQueue.take();

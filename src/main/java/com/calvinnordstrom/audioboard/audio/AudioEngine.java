@@ -23,7 +23,7 @@ public class AudioEngine {
     public void start() {
         router.start();
 
-        commandThread.submit(this::processLoop);
+        commandThread.submit(this::commandLoop);
     }
 
     public void stop() {
@@ -36,7 +36,7 @@ public class AudioEngine {
         commandQueue.offer(command);
     }
 
-    private void processLoop() {
+    private void commandLoop() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 AudioCommand cmd = commandQueue.take();
