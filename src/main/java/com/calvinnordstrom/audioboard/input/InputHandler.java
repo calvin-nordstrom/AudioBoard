@@ -13,15 +13,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InputHandler {
+    private static final String INPUT_THREAD_NAME = "AudioBoard Input Thread";
     private final KeyListener keyListener;
     private final SerialListener serialInputListener;
     private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
-    private final ExecutorService inputThread = Executors.newSingleThreadExecutor(r -> {
-        Thread thread = new Thread(r);
-        thread.setName("AudioBoard Input Thread");
-        return thread;
-    });
+    private ExecutorService inputThread;
     private final Consumer<Input> onInput;
 
     public InputHandler(Consumer<Input> onInput) {
@@ -35,6 +32,11 @@ public class InputHandler {
         GlobalScreen.addNativeKeyListener(keyListener);
         serialInputListener.start();
 
+        inputThread = Executors.newSingleThreadExecutor(r -> {
+            Thread thread = new Thread(r);
+            thread.setName(INPUT_THREAD_NAME);
+            return thread;
+        });
         inputThread.submit(this::inputLoop);
     }
 
@@ -42,7 +44,9 @@ public class InputHandler {
         stopGlobalScreen();
         serialInputListener.stop();
 
-        inputThread.shutdownNow();
+        if (inputThread != null) {
+            inputThread.shutdownNow();
+        }
     }
 
     private void handleKeyInput(Input input) {
