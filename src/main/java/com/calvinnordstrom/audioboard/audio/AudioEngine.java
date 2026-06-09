@@ -14,20 +14,20 @@ public class AudioEngine {
         thread.setName("AudioBoard Audio Command Thread");
         return thread;
     });
-    private final AudioRouter router;
+    private final AudioMixer mixer;
 
     public AudioEngine(TargetDataLine mic, SourceDataLine out) {
-        router = new AudioRouter(mic, out);
+        mixer = new AudioMixer(mic, out);
     }
 
     public void start() {
-        router.start();
+        mixer.start();
 
         commandThread.submit(this::commandLoop);
     }
 
     public void stop() {
-        router.stop();
+        mixer.stop();
 
         commandThread.shutdownNow();
     }
@@ -41,7 +41,7 @@ public class AudioEngine {
             try {
                 AudioCommand cmd = commandQueue.take();
                 if (cmd instanceof PlaySampleCommand p) {
-                    router.injectAudio(p.sound(), 1.0F);
+                    mixer.addSound(p.sound(), 1.0f);
                 }
             } catch (InterruptedException e) {
                 return;
