@@ -14,12 +14,13 @@ import java.util.logging.Logger;
 
 public class InputHandler {
     private static final String INPUT_THREAD_NAME = "AudioBoard Input Thread";
+    private final Consumer<Input> onInput;
+    private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
+    private ExecutorService inputThread;
+    private volatile boolean running;
     private final KeyListener keyListener;
     private final SerialListener serialInputListener;
     private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
-    private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
-    private ExecutorService inputThread;
-    private final Consumer<Input> onInput;
 
     public InputHandler(Consumer<Input> onInput) {
         this.onInput = onInput;
@@ -27,10 +28,11 @@ public class InputHandler {
         serialInputListener = new SerialListener("COM3", 115200, this::handleSerialLine);
     }
 
-    public void start() {
-        startGlobalScreen();
-        GlobalScreen.addNativeKeyListener(keyListener);
-        serialInputListener.start();
+    public synchronized void start() {
+        if (running) {
+            return;
+        }
+        running = true;
 
         inputThread = Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r);
@@ -38,15 +40,24 @@ public class InputHandler {
             return thread;
         });
         inputThread.submit(this::inputLoop);
+
+        startGlobalScreen();
+        GlobalScreen.addNativeKeyListener(keyListener);
+        serialInputListener.start();
     }
 
-    public void stop() {
-        stopGlobalScreen();
-        serialInputListener.stop();
+    public synchronized void stop() {
+        if (!running) {
+            return;
+        }
+        running = false;
 
         if (inputThread != null) {
             inputThread.shutdownNow();
         }
+
+        stopGlobalScreen();
+        serialInputListener.stop();
     }
 
     private void handleKeyInput(Input input) {

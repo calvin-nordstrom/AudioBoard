@@ -27,20 +27,17 @@ public class AudioMixer {
         if (running) {
             return;
         }
-        running = true;
+
+        validateFormats();
 
         try {
             inputLine.open();
-            inputLine.start();
-
             outputLine.open();
-            outputLine.start();
-
-            validateFormats();
         } catch (LineUnavailableException e) {
-            running = false;
             throw new RuntimeException(e);
         }
+
+        running = true;
 
         mixerThread = Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r);
@@ -48,6 +45,9 @@ public class AudioMixer {
             return thread;
         });
         mixerThread.submit(this::mixerLoop);
+
+        inputLine.start();
+        outputLine.start();
     }
 
     public synchronized void stop() {
@@ -55,6 +55,10 @@ public class AudioMixer {
             return;
         }
         running = false;
+
+        if (mixerThread != null) {
+            mixerThread.shutdownNow();
+        }
 
         stopAllSounds();
 
@@ -64,10 +68,6 @@ public class AudioMixer {
         outputLine.drain();
         outputLine.stop();
         outputLine.close();
-
-        if (mixerThread != null) {
-            mixerThread.shutdownNow();
-        }
     }
 
     public PlayingSound addSound(Sound sound, float volume) {

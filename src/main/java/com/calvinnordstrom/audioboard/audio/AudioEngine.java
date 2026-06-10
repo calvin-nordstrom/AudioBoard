@@ -11,14 +11,18 @@ public class AudioEngine {
     private static final String COMMAND_THREAD_NAME = "AudioBoard Audio Command Thread";
     private final BlockingQueue<AudioCommand> commandQueue = new LinkedBlockingQueue<>();
     private ExecutorService commandThread;
+    private volatile boolean running;
     private final AudioMixer mixer;
 
     public AudioEngine(TargetDataLine mic, SourceDataLine out) {
         mixer = new AudioMixer(mic, out);
     }
 
-    public void start() {
-        mixer.start();
+    public synchronized void start() {
+        if (running) {
+            return;
+        }
+        running = true;
 
         commandThread = Executors.newSingleThreadExecutor(r -> {
             Thread thread = new Thread(r);
@@ -26,14 +30,21 @@ public class AudioEngine {
             return thread;
         });
         commandThread.submit(this::commandLoop);
+
+        mixer.start();
     }
 
-    public void stop() {
-        mixer.stop();
+    public synchronized void stop() {
+        if (!running) {
+            return;
+        }
+        running = false;
 
         if (commandThread != null) {
             commandThread.shutdownNow();
         }
+
+        mixer.stop();
     }
 
     public void submit(AudioCommand command) {
@@ -48,7 +59,7 @@ public class AudioEngine {
                     mixer.addSound(p.sound(), 1.0f);
                 }
             } catch (InterruptedException e) {
-                return;
+                Thread.currentThread().interrupt();
             }
         }
     }
