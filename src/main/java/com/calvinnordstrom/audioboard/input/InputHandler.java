@@ -19,13 +19,12 @@ public class InputHandler {
     private ExecutorService inputThread;
     private volatile boolean running;
     private final KeyListener keyListener;
-    private final SerialListener serialInputListener;
-    private final SerialProtocolDecoder decoder = new SerialProtocolDecoder();
+    private final SerialListener serialListener;
 
     public InputHandler(Consumer<Input> onInput) {
         this.onInput = onInput;
         keyListener = new KeyListener(this::handleKeyInput);
-        serialInputListener = new SerialListener("COM3", 115200, this::handleSerialLine);
+        serialListener = new SerialListener("COM3", 115200, this::handleSerialInput);
     }
 
     public synchronized void start() {
@@ -43,7 +42,7 @@ public class InputHandler {
 
         startGlobalScreen();
         GlobalScreen.addNativeKeyListener(keyListener);
-        serialInputListener.start();
+        serialListener.start();
     }
 
     public synchronized void stop() {
@@ -57,18 +56,15 @@ public class InputHandler {
         }
 
         stopGlobalScreen();
-        serialInputListener.stop();
+        serialListener.stop();
     }
 
     private void handleKeyInput(Input input) {
         inputQueue.offer(input);
     }
 
-    private void handleSerialLine(String line) {
-        Input input = decoder.decode(line);
-        if (input != null) {
-            inputQueue.offer(input);
-        }
+    private void handleSerialInput(Input input) {
+        inputQueue.offer(input);
     }
 
     private void inputLoop() {
