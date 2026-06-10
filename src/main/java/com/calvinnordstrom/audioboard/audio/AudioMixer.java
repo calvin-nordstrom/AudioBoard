@@ -154,7 +154,6 @@ public class AudioMixer {
 
                 outputLine.write(outputBytes, 0, micSampleCount * 2);
             }
-
         } finally {
             running = false;
         }
@@ -201,8 +200,8 @@ public class AudioMixer {
         int sampleCount = bytesRead / 2;
         for (int i = 0; i < sampleCount; i++) {
             int byteIndex = i * 2;
-            short s;
 
+            short s;
             if (bigEndian) {
                 s = (short) (((bytes[byteIndex] & 0xff) << 8) | (bytes[byteIndex + 1] & 0xff));
             } else {
