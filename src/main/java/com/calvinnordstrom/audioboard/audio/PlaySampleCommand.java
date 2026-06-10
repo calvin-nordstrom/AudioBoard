@@ -1,4 +1,4 @@
 package com.calvinnordstrom.audioboard.audio;
 
-public record PlaySampleCommand(Sound sound) implements AudioCommand {
+public record PlaySampleCommand(SoundDefinition soundDefinition) implements AudioCommand {
 }

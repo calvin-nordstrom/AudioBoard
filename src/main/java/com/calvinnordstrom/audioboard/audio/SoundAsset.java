@@ -1,18 +1,13 @@
 package com.calvinnordstrom.audioboard.audio;
 
-public final class Sound {
+public final class SoundAsset {
     private final float[] pcm;
     private final byte[] pcm16;
     private final int sampleRate;
     private final int channels;
     private final int frameCount;
 
-    public Sound(
-            float[] pcm,
-            byte[] pcm16,
-            int sampleRate,
-            int channels
-    ) {
+    public SoundAsset(float[] pcm, byte[] pcm16, int sampleRate, int channels) {
         this.pcm = pcm;
         this.pcm16 = pcm16;
         this.sampleRate = sampleRate;

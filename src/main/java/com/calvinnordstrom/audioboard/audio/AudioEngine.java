@@ -55,8 +55,10 @@ public class AudioEngine {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 AudioCommand cmd = commandQueue.take();
-                if (cmd instanceof PlaySampleCommand p) {
-                    mixer.addSound(p.sound(), 1.0f);
+                if (cmd instanceof PlaySampleCommand(SoundDefinition soundDefinition)) {
+                    SoundAsset soundAsset = soundDefinition.getSoundAsset();
+                    float volume = soundDefinition.getVolume();
+                    mixer.addSound(soundAsset, volume);
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

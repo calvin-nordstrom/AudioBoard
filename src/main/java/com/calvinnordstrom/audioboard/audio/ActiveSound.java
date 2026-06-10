@@ -1,18 +1,18 @@
 package com.calvinnordstrom.audioboard.audio;
 
 class ActiveSound {
-    final Sound sound;
+    final SoundAsset soundAsset;
     final float volume;
     int position;
     volatile boolean stopped;
 
-    ActiveSound(Sound sound, float volume) {
-        this.sound = sound;
+    ActiveSound(SoundAsset soundAsset, float volume) {
+        this.soundAsset = soundAsset;
         this.volume = volume;
     }
 
     boolean finished() {
-        return stopped || position >= sound.getPcm().length;
+        return stopped || position >= soundAsset.getPcm().length;
     }
 
     void stop() {

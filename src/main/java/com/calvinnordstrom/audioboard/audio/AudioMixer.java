@@ -70,13 +70,13 @@ public class AudioMixer {
         outputLine.close();
     }
 
-    public PlayingSound addSound(Sound sound, float volume) {
-        if (sound == null || sound.getPcm().length == 0) {
+    public PlayingSound addSound(SoundAsset soundAsset, float volume) {
+        if (soundAsset == null || soundAsset.getPcm().length == 0) {
             return null;
         }
 
         float clampedVolume = Math.clamp(volume, 0f, 1f);
-        ActiveSound activeSound = new ActiveSound(sound, clampedVolume);
+        ActiveSound activeSound = new ActiveSound(soundAsset, clampedVolume);
 
         activeSounds.add(activeSound);
 
@@ -123,7 +123,7 @@ public class AudioMixer {
                         continue;
                     }
 
-                    float[] pcm = active.sound.getPcm();
+                    float[] pcm = active.soundAsset.getPcm();
                     int remaining = pcm.length - active.position;
 
                     int count = Math.min(micSampleCount, remaining);

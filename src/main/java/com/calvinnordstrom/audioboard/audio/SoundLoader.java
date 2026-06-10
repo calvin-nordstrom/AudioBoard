@@ -6,27 +6,22 @@ import javax.sound.sampled.AudioSystem;
 import java.io.File;
 
 public final class SoundLoader {
-    public Sound load(File file) {
+    public static SoundAsset load(File file) {
         try (AudioInputStream ais = AudioSystem.getAudioInputStream(file)) {
             AudioFormat format = ais.getFormat();
 
             validate(format);
 
             byte[] pcm16 = ais.readAllBytes();
-            float[] pcm = decode16BitPcm(pcm16, format);
+            float[] pcm = decode16BitPcm(pcm16);
 
-            return new Sound(
-                    pcm,
-                    pcm16,
-                    (int) format.getSampleRate(),
-                    format.getChannels()
-            );
+            return new SoundAsset(pcm, pcm16, (int) format.getSampleRate(), format.getChannels());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void validate(AudioFormat format) {
+    private static void validate(AudioFormat format) {
         if (format.getSampleSizeInBits() != 16) {
             throw new IllegalArgumentException("Only 16-bit PCM audio is supported");
         }
@@ -36,7 +31,7 @@ public final class SoundLoader {
         }
     }
 
-    private float[] decode16BitPcm(byte[] raw, AudioFormat format) {
+    private static float[] decode16BitPcm(byte[] raw) {
         float[] pcm = new float[raw.length / 2];
 
         for (int i = 0; i < raw.length; i += 2) {
