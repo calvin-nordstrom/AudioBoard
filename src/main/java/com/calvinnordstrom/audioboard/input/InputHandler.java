@@ -4,25 +4,22 @@ import com.calvinnordstrom.audioboard.Main;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.List;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class InputHandler {
     private static final String INPUT_THREAD_NAME = "AudioBoard Input Thread";
-    private final Consumer<Input> onInput;
+    private final List<Consumer<Input>> listeners = new CopyOnWriteArrayList<>();
     private final BlockingQueue<Input> inputQueue = new LinkedBlockingQueue<>();
     private ExecutorService inputThread;
     private volatile boolean running;
     private final KeyListener keyListener;
     private final SerialListener serialListener;
 
-    public InputHandler(Consumer<Input> onInput) {
-        this.onInput = onInput;
+    public InputHandler() {
         keyListener = new KeyListener(this::handleKeyInput);
         serialListener = new SerialListener("COM3", 115200, this::handleSerialInput);
     }
@@ -59,6 +56,20 @@ public class InputHandler {
         serialListener.stop();
     }
 
+    public void addListener(Consumer<Input> listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(Consumer<Input> listener) {
+        listeners.remove(listener);
+    }
+
+    private void dispatch(Input input) {
+        for (Consumer<Input> listener : listeners) {
+            listener.accept(input);
+        }
+    }
+
     private void handleKeyInput(Input input) {
         inputQueue.offer(input);
     }
@@ -71,7 +82,7 @@ public class InputHandler {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 Input input = inputQueue.take();
-                onInput.accept(input);
+                dispatch(input);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

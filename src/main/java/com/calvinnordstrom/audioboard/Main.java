@@ -34,7 +34,8 @@ public class Main extends Application {
                 AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
         );
         inputRouter = new InputRouter(audioEngine::submit);
-        inputHandler = new InputHandler(inputRouter::route);
+        inputHandler = new InputHandler();
+        inputHandler.addListener(inputRouter::route);
     }
 
     @Override
