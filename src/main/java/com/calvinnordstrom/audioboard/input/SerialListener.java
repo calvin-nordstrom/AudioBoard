@@ -59,7 +59,10 @@ public class SerialListener implements SerialPortDataListener {
             buffer.delete(0, index + 1);
 
             if (!line.isEmpty()) {
-                onInput.accept(decodeSerialLine(line));
+                Input input = decodeSerialLine(line);
+                if (input != null) {
+                    onInput.accept(input);
+                }
             }
         }
     }
