@@ -12,7 +12,7 @@ class ActiveSound {
     }
 
     boolean finished() {
-        return stopped || position >= soundAsset.getPcm().length;
+        return stopped || position >= soundAsset.pcm().length;
     }
 
     void stop() {

@@ -15,7 +15,7 @@ public final class SoundLoader {
             byte[] pcm16 = ais.readAllBytes();
             float[] pcm = decode16BitPcm(pcm16);
 
-            return new SoundAsset(pcm, pcm16, (int) format.getSampleRate(), format.getChannels());
+            return new SoundAsset(pcm);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

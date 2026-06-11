@@ -71,7 +71,7 @@ public class AudioMixer {
     }
 
     public PlayingSound addSound(SoundAsset soundAsset, float volume) {
-        if (soundAsset == null || soundAsset.getPcm().length == 0) {
+        if (soundAsset == null || soundAsset.pcm().length == 0) {
             return null;
         }
 
@@ -123,7 +123,7 @@ public class AudioMixer {
                         continue;
                     }
 
-                    float[] pcm = active.soundAsset.getPcm();
+                    float[] pcm = active.soundAsset.pcm();
                     int remaining = pcm.length - active.position;
 
                     int count = Math.min(micSampleCount, remaining);
