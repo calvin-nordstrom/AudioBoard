@@ -52,7 +52,7 @@ public class AudioEngine {
     }
 
     private void commandLoop() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (running) {
             try {
                 AudioCommand cmd = commandQueue.take();
                 if (cmd instanceof PlaySampleCommand(SoundDefinition soundDefinition)) {

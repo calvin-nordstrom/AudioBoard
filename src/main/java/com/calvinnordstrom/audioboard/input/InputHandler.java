@@ -19,8 +19,8 @@ public class InputHandler {
     private final SerialListener serialListener;
 
     public InputHandler() {
-        keyListener = new KeyListener(this::handleKeyInput);
-        serialListener = new SerialListener("COM3", 115200, this::handleSerialInput);
+        keyListener = new KeyListener(this::enqueue);
+        serialListener = new SerialListener("COM3", 115200, this::enqueue);
     }
 
     public synchronized void start() {
@@ -69,16 +69,12 @@ public class InputHandler {
         }
     }
 
-    private void handleKeyInput(Input input) {
-        inputQueue.offer(input);
-    }
-
-    private void handleSerialInput(Input input) {
+    private void enqueue(Input input) {
         inputQueue.offer(input);
     }
 
     private void inputLoop() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (running) {
             try {
                 Input input = inputQueue.take();
                 dispatch(input);
