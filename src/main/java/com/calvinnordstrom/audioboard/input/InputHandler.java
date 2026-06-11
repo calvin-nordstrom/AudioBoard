@@ -1,6 +1,5 @@
 package com.calvinnordstrom.audioboard.input;
 
-import com.calvinnordstrom.audioboard.Main;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
@@ -94,7 +93,7 @@ public class InputHandler {
         try {
             GlobalScreen.registerNativeHook();
         } catch (NativeHookException e) {
-            Main.LOGGER.severe(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -102,7 +101,7 @@ public class InputHandler {
         try {
             GlobalScreen.unregisterNativeHook();
         } catch (NativeHookException e) {
-            Main.LOGGER.severe(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }
