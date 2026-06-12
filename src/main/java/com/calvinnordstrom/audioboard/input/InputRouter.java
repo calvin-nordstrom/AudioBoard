@@ -1,34 +1,19 @@
 package com.calvinnordstrom.audioboard.input;
 
-import com.calvinnordstrom.audioboard.audio.*;
+import com.calvinnordstrom.audioboard.audio.AudioCommand;
+import com.calvinnordstrom.audioboard.audio.PlaySampleCommand;
+import com.calvinnordstrom.audioboard.audio.SoundDefinition;
 
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class InputRouter {
     private final Consumer<AudioCommand> commandSink;
-    private final List<SoundDefinition> sounds = new ArrayList<>();
+    private final List<SoundDefinition> sounds;
 
-    public InputRouter(Consumer<AudioCommand> commandSink) {
+    public InputRouter(List<SoundDefinition> sounds, Consumer<AudioCommand> commandSink) {
+        this.sounds = sounds;
         this.commandSink = commandSink;
-
-        // Temporarily hardcoded; fill in your own file paths
-        sounds.add(new SoundDefinition("Test1",
-                Paths.get(""),
-                Paths.get(""),
-                new InputBinding(Input.Source.DESKTOP, "O"),
-                0.8f,
-                true
-        ));
-        sounds.add(new SoundDefinition("Test2",
-                Paths.get(""),
-                Paths.get(""),
-                new InputBinding(Input.Source.DESKTOP, "P"),
-                0.8f,
-                true
-        ));
     }
 
     public void route(Input input) {
@@ -38,16 +23,16 @@ public class InputRouter {
 
         InputBinding binding = new InputBinding(input.source(), input.key());
 
-        for (SoundDefinition soundDefinition : sounds) {
-            if (!soundDefinition.getInputBinding().equals(binding)) {
+        for (SoundDefinition sound : sounds) {
+            if (!sound.getInputBinding().equals(binding)) {
                 continue;
             }
 
-            if (!soundDefinition.isEnabled()) {
+            if (!sound.isEnabled()) {
                 continue;
             }
 
-            commandSink.accept(new PlaySampleCommand(soundDefinition));
+            commandSink.accept(new PlaySampleCommand(sound));
         }
     }
 }

@@ -1,51 +1,36 @@
 package com.calvinnordstrom.audioboard;
 
-import com.calvinnordstrom.audioboard.audio.AudioEngine;
-import com.calvinnordstrom.audioboard.audio.AudioUtils;
-import com.calvinnordstrom.audioboard.input.InputHandler;
-import com.calvinnordstrom.audioboard.input.InputRouter;
+import com.calvinnordstrom.audioboard.controller.MainController;
+import com.calvinnordstrom.audioboard.model.MainModel;
+import com.calvinnordstrom.audioboard.util.Resources;
+import com.calvinnordstrom.audioboard.view.MainView;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.util.Objects;
-import java.util.logging.Logger;
-
 public class Main extends Application {
-    public static final Logger LOGGER = Logger.getLogger(Main.class.getPackageName());
     private static final String TITLE = "AudioBoard";
     private static final String VERSION = "0.1.0";
     private static final double WIDTH = 960;
     private static final double HEIGHT = 540;
     private static final double MIN_WIDTH = 640;
     private static final double MIN_HEIGHT = 360;
-    private AudioEngine audioEngine;
-    private InputRouter inputRouter;
-    private InputHandler inputHandler;
+    private final MainModel model = new MainModel();
+    private final MainController controller = new MainController(model);
+    private final MainView view = new MainView(controller);
 
     @Override
     public void init() {
-        audioEngine = new AudioEngine(
-                AudioUtils.getDefaultTarget(),
-                AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
-        );
-        inputRouter = new InputRouter(audioEngine::submit);
-        inputHandler = new InputHandler();
-        inputHandler.addListener(inputRouter::route);
     }
 
     @Override
     public void start(Stage stage) {
-        audioEngine.start();
-        inputHandler.start();
+        model.start();
 
-        Node root = new BorderPane();
-        Scene scene = new Scene((Parent) root);
-        scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("styles.css")).toExternalForm());
+        Scene scene = new Scene((Parent) view.asNode());
+        scene.getStylesheets().add(Resources.STYLES);
 
         stage.setScene(scene);
         stage.setTitle(TITLE + " " + VERSION);
@@ -59,7 +44,7 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        audioEngine.stop();
-        inputHandler.stop();
+        model.stop();
+        view.dispose();
     }
 }
