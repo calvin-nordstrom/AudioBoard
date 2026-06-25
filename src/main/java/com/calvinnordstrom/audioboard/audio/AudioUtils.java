@@ -1,6 +1,8 @@
 package com.calvinnordstrom.audioboard.audio;
 
 import javax.sound.sampled.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AudioUtils {
     public static final AudioFormat DEFAULT_FORMAT = new AudioFormat(
@@ -21,35 +23,6 @@ public class AudioUtils {
                 return null;
             }
             return (TargetDataLine) AudioSystem.getLine(TARGET_DATA_LINE_INFO);
-        } catch (LineUnavailableException e) {
-            System.err.println(e.getMessage());
-        }
-        return null;
-    }
-
-    public static SourceDataLine getDefaultSource() {
-//        try {
-//            for (Mixer.Info info : AudioSystem.getMixerInfo()) {
-//                System.out.println(info);
-//            }
-//
-//            Mixer.Info mixerInfo = AudioSystem.getMixerInfo()[0];
-//            Mixer mixer = AudioSystem.getMixer(mixerInfo);
-////            return (SourceDataLine) mixer.getLine(mixer.getLineInfo());
-//            return (SourceDataLine) AudioSystem.getLine(DATA_LINE_INFO);
-
-//            Mixer.Info mixerInfo = AudioSystem.getMixerInfo()[0];
-//            Mixer mixer = AudioSystem.getMixer(mixerInfo);
-//            return (SourceDataLine) mixer.getLine(SOURCE_DATA_LINE_INFO);
-//        } catch (LineUnavailableException e) {
-//            System.err.println(e.getMessage());
-//        }
-
-        try {
-            if (!AudioSystem.isLineSupported(SOURCE_DATA_LINE_INFO)) {
-                return null;
-            }
-            return (SourceDataLine) AudioSystem.getLine(SOURCE_DATA_LINE_INFO);
         } catch (LineUnavailableException e) {
             System.err.println(e.getMessage());
         }
@@ -77,5 +50,39 @@ public class AudioUtils {
             }
         }
         return null;
+    }
+
+    public static List<Mixer.Info> getInputDevices() {
+        List<Mixer.Info> devices = new ArrayList<>();
+
+        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
+            Mixer mixer = AudioSystem.getMixer(info);
+
+            for (Line.Info lineInfo : mixer.getTargetLineInfo()) {
+                if (TargetDataLine.class.isAssignableFrom(lineInfo.getLineClass())) {
+                    devices.add(info);
+                    break;
+                }
+            }
+        }
+
+        return devices;
+    }
+
+    public static List<Mixer.Info> getOutputDevices() {
+        List<Mixer.Info> devices = new ArrayList<>();
+
+        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
+            Mixer mixer = AudioSystem.getMixer(info);
+
+            for (Line.Info lineInfo : mixer.getSourceLineInfo()) {
+                if (SourceDataLine.class.isAssignableFrom(lineInfo.getLineClass())) {
+                    devices.add(info);
+                    break;
+                }
+            }
+        }
+
+        return devices;
     }
 }
