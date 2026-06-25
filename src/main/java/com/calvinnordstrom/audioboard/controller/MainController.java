@@ -1,10 +1,10 @@
 package com.calvinnordstrom.audioboard.controller;
 
-import com.calvinnordstrom.audioboard.audio.SoundDefinition;
+import com.calvinnordstrom.audioboard.audio.Sound;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.model.MainModel;
-import javafx.collections.ObservableList;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MainController {
@@ -22,7 +22,7 @@ public class MainController {
         model.removeInputListener(listener);
     }
 
-    public ObservableList<SoundDefinition> getSounds() {
+    public List<Sound> getSounds() {
         return model.getSounds();
     }
 }
