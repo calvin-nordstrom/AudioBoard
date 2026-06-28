@@ -4,7 +4,7 @@ import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.model.MainModel;
 import com.calvinnordstrom.audioboard.util.Resources;
 import com.calvinnordstrom.audioboard.view.MainView;
-import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
+import com.calvinnordstrom.audioboard.viewmodel.MainViewModel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -20,8 +20,11 @@ public class Main extends Application {
     private static final double MIN_HEIGHT = 540;
     private final MainModel model = new MainModel();
     private final MainController controller = new MainController(model);
-    private final SoundListViewModel soundListViewModel = new SoundListViewModel(model.getSounds());
-    private final MainView view = new MainView(soundListViewModel, controller);
+    private final MainViewModel viewModel = new MainViewModel(
+            model.getSounds(),
+            model.getSettings()
+    );
+    private final MainView view = new MainView(viewModel, controller);
 
     @Override
     public void init() {

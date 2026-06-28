@@ -1,26 +1,29 @@
 package com.calvinnordstrom.audioboard.view;
 
 import com.calvinnordstrom.audioboard.controller.MainController;
-import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
+import com.calvinnordstrom.audioboard.viewmodel.MainViewModel;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 
 public class MainView {
-    private final SoundListViewModel model;
+    private final MainViewModel model;
     private final MainController controller;
     private final BorderPane view = new BorderPane();
-    private final SoundListView soundListView;
     private final SoundEditorView soundEditorView;
+    private final SettingsView settingsView;
+    private final SoundListView soundListView;
 
-    public MainView(SoundListViewModel model, MainController controller) {
+    public MainView(MainViewModel model, MainController controller) {
         this.model = model;
         this.controller = controller;
 
-        soundListView = new SoundListView(model);
-        soundEditorView = new SoundEditorView(model, controller);
+        soundEditorView = new SoundEditorView(model.getSounds(), controller);
+        settingsView = new SettingsView(model.getSettings(), controller);
+        soundListView = new SoundListView(model.getSounds());
 
-        view.setCenter(soundListView.asNode());
         view.setLeft(soundEditorView.asNode());
+        view.setBottom(settingsView.asNode());
+        view.setCenter(soundListView.asNode());
     }
 
 

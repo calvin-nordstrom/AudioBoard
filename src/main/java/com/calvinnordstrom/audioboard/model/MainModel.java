@@ -6,7 +6,6 @@ import com.calvinnordstrom.audioboard.audio.Sound;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import com.calvinnordstrom.audioboard.input.InputHandler;
-import com.calvinnordstrom.audioboard.input.InputRouter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.function.Consumer;
 
 public class MainModel {
     private final List<Sound> sounds = new ArrayList<>();
+    private final Settings settings = new Settings(new InputBinding(Input.Source.DESKTOP, "Space"), true);
     private final AudioEngine audioEngine;
     private final InputRouter inputRouter;
     private final InputHandler inputHandler;
@@ -46,7 +46,7 @@ public class MainModel {
                 AudioUtils.getDefaultTarget(),
                 AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
         );
-        inputRouter = new InputRouter(sounds, audioEngine::submit);
+        inputRouter = new InputRouter(sounds, settings, audioEngine::submit);
         inputHandler = new InputHandler();
         inputHandler.addListener(inputRouter::route);
     }
@@ -71,5 +71,9 @@ public class MainModel {
 
     public List<Sound> getSounds() {
         return sounds;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 }

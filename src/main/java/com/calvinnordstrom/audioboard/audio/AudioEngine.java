@@ -55,10 +55,14 @@ public class AudioEngine {
         while (running) {
             try {
                 AudioCommand cmd = commandQueue.take();
+
                 if (cmd instanceof PlaySampleCommand(Sound sound)) {
                     SoundAsset soundAsset = sound.getSoundAsset();
                     float volume = sound.getVolume();
+
                     mixer.addSound(soundAsset, volume);
+                } else if (cmd instanceof StopAllSoundsCommand) {
+                    mixer.stopAllSounds();
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
