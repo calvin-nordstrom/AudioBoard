@@ -51,10 +51,6 @@ public class SoundViewModel {
         waitingForInput.set(false);
     }
 
-    public Sound getModel() {
-        return model;
-    }
-
     public StringProperty nameProperty() {
         return name;
     }
