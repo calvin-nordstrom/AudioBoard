@@ -86,8 +86,4 @@ public class Sound {
     public SoundAsset getSoundAsset() {
         return soundAsset;
     }
-
-    public void setSoundAsset(SoundAsset soundAsset) {
-        this.soundAsset = soundAsset;
-    }
 }
