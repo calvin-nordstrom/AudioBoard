@@ -1,8 +1,6 @@
 package com.calvinnordstrom.audioboard.model;
 
-import com.calvinnordstrom.audioboard.audio.AudioEngine;
-import com.calvinnordstrom.audioboard.audio.AudioUtils;
-import com.calvinnordstrom.audioboard.audio.Sound;
+import com.calvinnordstrom.audioboard.audio.*;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import com.calvinnordstrom.audioboard.input.InputHandler;
@@ -14,7 +12,8 @@ import java.util.function.Consumer;
 public class MainModel {
     private final List<Sound> sounds = new ArrayList<>();
     private final Settings settings = new Settings(new InputBinding(Input.Source.DESKTOP, "Space"), true);
-    private final AudioEngine audioEngine;
+    private final AudioEngine virtualEngine;
+    private final AudioEngine localEngine;
     private final InputRouter inputRouter;
     private final InputHandler inputHandler;
 
@@ -42,22 +41,33 @@ public class MainModel {
                 true
         ));
 
-        audioEngine = new AudioEngine(
-                AudioUtils.getDefaultTarget(),
-                AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
+        virtualEngine = new AudioEngine(
+                new AudioMixer(
+                        AudioUtils.getDefaultTarget(),
+                        AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
+                )
         );
-        inputRouter = new InputRouter(sounds, settings, audioEngine::submit);
+
+        localEngine = new AudioEngine(
+                new LocalAudioMixer(
+                        AudioUtils.getSourceByName("Logitech PRO X Gaming Headset")
+                )
+        );
+
+        inputRouter = new InputRouter(sounds, settings, virtualEngine, localEngine);
         inputHandler = new InputHandler();
         inputHandler.addListener(inputRouter::route);
     }
 
     public void start() {
-        audioEngine.start();
+        virtualEngine.start();
+        localEngine.start();
         inputHandler.start();
     }
 
     public void stop() {
-        audioEngine.stop();
+        virtualEngine.stop();
+        localEngine.stop();
         inputHandler.stop();
     }
 

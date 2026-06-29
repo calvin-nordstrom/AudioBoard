@@ -1,7 +1,5 @@
 package com.calvinnordstrom.audioboard.audio;
 
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,13 +7,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class AudioEngine {
     private static final String COMMAND_THREAD_NAME = "AudioBoard Audio Command Thread";
+    private final AbstractAudioMixer mixer;
     private final BlockingQueue<AudioCommand> commandQueue = new LinkedBlockingQueue<>();
     private ExecutorService commandThread;
     private volatile boolean running;
-    private final AudioMixer mixer;
 
-    public AudioEngine(TargetDataLine mic, SourceDataLine out) {
-        mixer = new AudioMixer(mic, out);
+    public AudioEngine(AbstractAudioMixer mixer) {
+        this.mixer = mixer;
     }
 
     public synchronized void start() {

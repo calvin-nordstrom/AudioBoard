@@ -1,6 +1,6 @@
 package com.calvinnordstrom.audioboard.model;
 
-import com.calvinnordstrom.audioboard.audio.AudioCommand;
+import com.calvinnordstrom.audioboard.audio.AudioEngine;
 import com.calvinnordstrom.audioboard.audio.PlaySampleCommand;
 import com.calvinnordstrom.audioboard.audio.Sound;
 import com.calvinnordstrom.audioboard.audio.StopAllSoundsCommand;
@@ -8,21 +8,23 @@ import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public class InputRouter {
     private final List<Sound> sounds;
     private final Settings settings;
-    private final Consumer<AudioCommand> commandSink;
+    private final AudioEngine virtualEngine;
+    private final AudioEngine localEngine;
 
     public InputRouter(
             List<Sound> sounds,
             Settings settings,
-            Consumer<AudioCommand> commandSink
+            AudioEngine virtualEngine,
+            AudioEngine localEngine
     ) {
         this.sounds = sounds;
         this.settings = settings;
-        this.commandSink = commandSink;
+        this.virtualEngine = virtualEngine;
+        this.localEngine = localEngine;
     }
 
     public void route(Input input) {
@@ -33,7 +35,8 @@ public class InputRouter {
         InputBinding binding = new InputBinding(input.source(), input.key());
 
         if (settings.getStopSoundsBinding().equals(binding)) {
-            commandSink.accept(new StopAllSoundsCommand());
+            virtualEngine.submit(new StopAllSoundsCommand());
+            localEngine.submit(new StopAllSoundsCommand());
             return;
         }
 
@@ -46,10 +49,10 @@ public class InputRouter {
                 continue;
             }
 
-            commandSink.accept(new PlaySampleCommand(sound));
+            virtualEngine.submit(new PlaySampleCommand(sound));
 
             if (settings.isLocalPlaybackEnabled()) {
-                System.out.println("TODO: Play sound locally: " + sound.getName());
+                localEngine.submit(new PlaySampleCommand(sound));
             }
         }
     }
