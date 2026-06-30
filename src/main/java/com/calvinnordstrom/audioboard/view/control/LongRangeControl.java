@@ -18,7 +18,8 @@ public class LongRangeControl extends NumberRangeControl<Long> {
                 max,
                 "%.0f",
                 DoubleUnaryOperator.identity(),
-                DoubleUnaryOperator.identity());
+                DoubleUnaryOperator.identity()
+        );
     }
 
     @Override

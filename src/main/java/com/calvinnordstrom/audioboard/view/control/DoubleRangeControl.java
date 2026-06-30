@@ -21,7 +21,8 @@ public class DoubleRangeControl extends NumberRangeControl<Double> {
                 displayMax,
                 labelFormat,
                 modelToDisplay,
-                displayToModel);
+                displayToModel
+        );
     }
 
     @Override

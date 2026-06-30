@@ -21,7 +21,8 @@ public class FloatRangeControl extends NumberRangeControl<Float> {
                 displayMax,
                 labelFormat,
                 modelToDisplay,
-                displayToModel);
+                displayToModel
+        );
     }
 
     @Override

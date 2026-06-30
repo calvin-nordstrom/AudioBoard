@@ -18,7 +18,8 @@ public class IntegerRangeControl extends NumberRangeControl<Integer> {
                 max,
                 "%.0f",
                 DoubleUnaryOperator.identity(),
-                DoubleUnaryOperator.identity());
+                DoubleUnaryOperator.identity()
+        );
     }
 
     @Override
