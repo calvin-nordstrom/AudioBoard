@@ -38,6 +38,23 @@ public class SoundEditorView {
             return;
         }
 
+        StringControl nameControl = new StringControl(
+                "Name",
+                sound.nameProperty()
+        );
+
+        PathControl iconControl = new PathControl(
+                "Icon",
+                sound.iconPathProperty(),
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp")
+        );
+
+        PathControl soundControl = new PathControl(
+                "Sound",
+                sound.soundPathProperty(),
+                new FileChooser.ExtensionFilter("WAV Files", "*.wav")
+        );
+
         Label inputBindingLabel = new Label("Input Binding");
         Button inputBindingButton = new Button();
         inputBindingButton.textProperty().bind(
@@ -61,41 +78,30 @@ public class SoundEditorView {
         inputBindingButton.setOnMousePressed(e -> {
             sound.beginRebinding();
         });
+        VBox inputBindingVBox = new VBox(inputBindingLabel, inputBindingButton);
+
+        FloatControl volumeControl = new FloatControl(
+                "Volume",
+                sound.volumeProperty(),
+                0,
+                100,
+                "%.0f%%",
+                v -> v * 100.0,
+                v -> v / 100.0
+        );
+
+        BooleanControl enabledControl = new BooleanControl(
+                "Enabled",
+                sound.enabledProperty()
+        );
 
         view.getChildren().addAll(
-                new StringControl(
-                        "Name",
-                        sound.nameProperty()
-                ).asNode(),
-
-                new PathControl(
-                        "Icon",
-                        sound.iconPathProperty(),
-                        new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp")
-                ).asNode(),
-
-                new PathControl(
-                        "Sound",
-                        sound.soundPathProperty(),
-                        new FileChooser.ExtensionFilter("WAV Files", "*.wav")
-                ).asNode(),
-
-                new VBox(inputBindingLabel, inputBindingButton),
-
-                new FloatControl(
-                        "Volume",
-                        sound.volumeProperty(),
-                        0,
-                        100,
-                        "%.0f%%",
-                        v -> v * 100.0,
-                        v -> v / 100.0
-                ).asNode(),
-
-                new BooleanControl(
-                        "Enabled",
-                        sound.enabledProperty()
-                ).asNode()
+                nameControl.asNode(),
+                iconControl.asNode(),
+                soundControl.asNode(),
+                inputBindingVBox,
+                volumeControl.asNode(),
+                enabledControl.asNode()
         );
     }
 

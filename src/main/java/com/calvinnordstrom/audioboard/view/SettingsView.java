@@ -30,7 +30,7 @@ public class SettingsView {
     private void init() {
         view.getChildren().clear();
 
-        Label stopSoundsBinding = new Label("Stop Sounds Binding");
+        Label stopSoundsBindingLabel = new Label("Stop Sounds Binding");
         Button stopSoundsBindingButton = new Button();
         stopSoundsBindingButton.textProperty().bind(
                 Bindings.createStringBinding(
@@ -53,14 +53,16 @@ public class SettingsView {
         stopSoundsBindingButton.setOnMousePressed(e -> {
             model.beginRebinding();
         });
+        VBox stopSoundsBindingVBox = new VBox(stopSoundsBindingLabel, stopSoundsBindingButton);
+
+        BooleanControl localPlaybackControl = new BooleanControl(
+                "Local Playback",
+                model.localPlaybackEnabledProperty()
+        );
 
         view.getChildren().addAll(
-                new VBox(stopSoundsBinding, stopSoundsBindingButton),
-
-                new BooleanControl(
-                        "Local Playback",
-                        model.localPlaybackEnabledProperty()
-                ).asNode()
+                stopSoundsBindingVBox,
+                localPlaybackControl.asNode()
         );
     }
 
