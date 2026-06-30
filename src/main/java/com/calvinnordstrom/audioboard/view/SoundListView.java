@@ -13,6 +13,7 @@ public class SoundListView {
         sounds.setCellFactory(_ -> new SoundCell());
 
         model.selectedSoundProperty().bind(sounds.getSelectionModel().selectedItemProperty());
+        sounds.getSelectionModel().select(0);
     }
 
     public Node asNode() {
