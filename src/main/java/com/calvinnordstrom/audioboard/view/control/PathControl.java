@@ -63,6 +63,11 @@ public class PathControl {
         });
 
         view.getChildren().addAll(titleLabel, filePane);
+
+        // Styles
+
+        fileLabel.getStyleClass().add("path-control-file-label");
+        filePane.getStyleClass().add("path-control-file-pane");
     }
 
     public Node asNode() {

@@ -1,0 +1,60 @@
+* {
+  -cn-border-color: #000000;
+
+  -cn-pane-bg-color-1: #282828;
+  -cn-pane-bg-color-2: #383838;
+  -cn-pane-bg-color-3: #484848;
+
+  -cn-sound-node-bg-color: #282828;
+  -cn-sound-node-hovered-bg-color: #686868;
+  -cn-sound-node-selected-bg-color: #585858;
+  -cn-sound-node-selected-border-color: #686868;
+
+  -cn-text-color: #ffffff;
+}
+
+/* Path control styles */
+
+.path-control-file-label {
+  -fx-alignment: center-left;
+}
+
+.path-control-file-pane {
+  -fx-alignment: center-left;
+  -fx-spacing: 5;
+}
+
+/* Number range control styles */
+
+.number-range-control-value-label {
+  -fx-alignment: center-left;
+  -fx-pref-width: 30;
+  -fx-min-width: 30;
+  -fx-max-width: 30;
+}
+
+.number-range-control-slider-pane {
+  -fx-alignment: center-left;
+  -fx-spacing: 5;
+}
+
+/* Sound editor view styles*/
+
+.sound-editor-view {
+  -fx-pref-width: 250;
+  -fx-min-width: 250;
+  -fx-max-width: 250;
+  -fx-padding: 10;
+  -fx-spacing: 10;
+}
+
+/* Settings view styles */
+
+.settings-view {
+  -fx-padding: 10;
+  -fx-spacing: 30;
+}
+
+.settings-node {
+  -fx-alignment: center-left;
+}

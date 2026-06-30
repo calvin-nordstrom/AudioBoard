@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.Objects;
@@ -55,6 +56,13 @@ public abstract class NumberRangeControl<T extends Number> {
         HBox sliderPane = new HBox(slider, valueLabel);
 
         view.getChildren().addAll(titleLabel, sliderPane);
+
+        // Styles
+
+        HBox.setHgrow(slider, Priority.ALWAYS);
+
+        valueLabel.getStyleClass().add("number-range-control-value-label");
+        sliderPane.getStyleClass().add("number-range-control-slider-pane");
     }
 
     protected abstract T fromDouble(double value);

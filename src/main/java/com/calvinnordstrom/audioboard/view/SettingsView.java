@@ -64,6 +64,13 @@ public class SettingsView {
                 stopSoundsBindingVBox,
                 localPlaybackControl.asNode()
         );
+
+        // Styles
+
+        view.getStyleClass().add("settings-view");
+        for (Node node : view.getChildren()) {
+            node.getStyleClass().add("settings-node");
+        }
     }
 
     private void handleInput(Input input) {

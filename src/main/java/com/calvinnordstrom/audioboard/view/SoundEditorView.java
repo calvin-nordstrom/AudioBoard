@@ -28,6 +28,14 @@ public class SoundEditorView {
         model.selectedSoundProperty().addListener((_, _, newValue) -> setSound(newValue));
 
         controller.addInputListener(this::handleInput);
+
+        init();
+    }
+
+    private void init() {
+        // Styles
+
+        view.getStyleClass().add("sound-editor-view");
     }
 
     private void setSound(SoundViewModel sound) {
