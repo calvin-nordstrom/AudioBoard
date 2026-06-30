@@ -4,7 +4,7 @@ import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import com.calvinnordstrom.audioboard.view.control.BooleanControl;
-import com.calvinnordstrom.audioboard.view.control.FloatControl;
+import com.calvinnordstrom.audioboard.view.control.FloatRangeControl;
 import com.calvinnordstrom.audioboard.view.control.PathControl;
 import com.calvinnordstrom.audioboard.view.control.StringControl;
 import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
@@ -80,7 +80,7 @@ public class SoundEditorView {
         });
         VBox inputBindingVBox = new VBox(inputBindingLabel, inputBindingButton);
 
-        FloatControl volumeControl = new FloatControl(
+        FloatRangeControl volumeControl = new FloatRangeControl(
                 "Volume",
                 sound.volumeProperty(),
                 0,

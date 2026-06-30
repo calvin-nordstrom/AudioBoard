@@ -10,10 +10,10 @@ import javafx.scene.layout.VBox;
 import java.util.Objects;
 import java.util.function.DoubleUnaryOperator;
 
-public abstract class AbstractNumberControl<T extends Number> {
+public abstract class NumberRangeControl<T extends Number> {
     private final VBox view = new VBox();
 
-    protected AbstractNumberControl(
+    protected NumberRangeControl(
             String title,
             Property<T> valueProperty,
             double displayMin,

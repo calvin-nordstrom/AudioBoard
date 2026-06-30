@@ -1,16 +1,15 @@
 package com.calvinnordstrom.audioboard.view.control;
 
-import javafx.beans.property.LongProperty;
+import javafx.beans.property.IntegerProperty;
 
 import java.util.function.DoubleUnaryOperator;
 
-public class LongControl extends AbstractNumberControl<Long> {
-
-    public LongControl(
+public class IntegerRangeControl extends NumberRangeControl<Integer> {
+    public IntegerRangeControl(
             String title,
-            LongProperty valueProperty,
-            long min,
-            long max
+            IntegerProperty valueProperty,
+            int min,
+            int max
     ) {
         super(
                 title,
@@ -23,7 +22,7 @@ public class LongControl extends AbstractNumberControl<Long> {
     }
 
     @Override
-    protected Long fromDouble(double value) {
-        return Math.round(value);
+    protected Integer fromDouble(double value) {
+        return (int) Math.round(value);
     }
 }

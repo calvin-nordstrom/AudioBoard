@@ -4,8 +4,8 @@ import javafx.beans.property.FloatProperty;
 
 import java.util.function.DoubleUnaryOperator;
 
-public class FloatControl extends AbstractNumberControl<Float> {
-    public FloatControl(
+public class FloatRangeControl extends NumberRangeControl<Float> {
+    public FloatRangeControl(
             String title,
             FloatProperty valueProperty,
             double displayMin,

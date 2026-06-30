@@ -4,8 +4,8 @@ import javafx.beans.property.DoubleProperty;
 
 import java.util.function.DoubleUnaryOperator;
 
-public class DoubleControl extends AbstractNumberControl<Double> {
-    public DoubleControl(
+public class DoubleRangeControl extends NumberRangeControl<Double> {
+    public DoubleRangeControl(
             String title,
             DoubleProperty valueProperty,
             double displayMin,
