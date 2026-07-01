@@ -48,6 +48,11 @@
   -fx-spacing: 10;
 }
 
+.sound-editor-view-icon-pane {
+  -fx-alignment: center;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 16, 0, 0, 0);
+}
+
 /* Settings view styles */
 
 .settings-view {

@@ -3,6 +3,7 @@ package com.calvinnordstrom.audioboard.view;
 import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
+import com.calvinnordstrom.audioboard.util.Resources;
 import com.calvinnordstrom.audioboard.view.control.BooleanControl;
 import com.calvinnordstrom.audioboard.view.control.FloatRangeControl;
 import com.calvinnordstrom.audioboard.view.control.PathControl;
@@ -11,11 +12,17 @@ import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
 import com.calvinnordstrom.audioboard.viewmodel.SoundViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+
+import java.nio.file.Path;
 
 public class SoundEditorView {
     private final SoundListViewModel model;
@@ -45,6 +52,18 @@ public class SoundEditorView {
             view.getChildren().add(new Label("Select a sound"));
             return;
         }
+
+        ImageView iconImage = new ImageView();
+        iconImage.imageProperty().unbind();
+        iconImage.setFitWidth(200);
+        iconImage.setFitHeight(200);
+        iconImage.setSmooth(true);
+        ObjectProperty<Path> iconPath = sound.iconPathProperty();
+        iconImage.setImage(Resources.getImage(iconPath.get()));
+        iconPath.addListener((_, _, newValue) -> {
+            iconImage.setImage(Resources.getImage(newValue));
+        });
+        HBox iconPane = new HBox(iconImage);
 
         StringControl nameControl = new StringControl(
                 "Name",
@@ -104,6 +123,7 @@ public class SoundEditorView {
         );
 
         view.getChildren().addAll(
+                iconPane,
                 nameControl.asNode(),
                 iconControl.asNode(),
                 soundControl.asNode(),
@@ -111,6 +131,12 @@ public class SoundEditorView {
                 volumeControl.asNode(),
                 enabledControl.asNode()
         );
+
+        // Styles
+
+        HBox.setHgrow(iconPane, Priority.ALWAYS);
+
+        iconPane.getStyleClass().add("sound-editor-view-icon-pane");
     }
 
     private void handleInput(Input input) {
