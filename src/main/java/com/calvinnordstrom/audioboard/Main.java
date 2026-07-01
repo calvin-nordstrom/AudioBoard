@@ -45,6 +45,9 @@ public class Main extends Application {
         stage.setMinWidth(MIN_WIDTH);
         stage.setOnHidden(_ -> Platform.exit());
         stage.show();
+
+        // Initially claim focus from TextField elements
+        scene.getRoot().requestFocus();
     }
 
     @Override
