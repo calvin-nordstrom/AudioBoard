@@ -57,6 +57,56 @@
   -fx-spacing: 10;
 }
 
+/* Sound list view styles */
+
+.sound-list-view-flow-pane {
+  -fx-padding: 10;
+  -fx-hgap: 10;
+  -fx-vgap: 10;
+}
+
+.sound-list-view-scroll-pane {
+  -fx-fit-to-width: true;
+  -fx-fit-to-width: true;
+}
+
+/* Sound cell view styles */
+
+.sound-cell {
+  -fx-alignment: center;
+  -fx-pref-width: 130;
+  -fx-min-width: 130;
+  -fx-max-width: 130;
+  -fx-pref-height: 180;
+  -fx-min-height: 180;
+  -fx-max-height: 180;
+  -fx-padding: 10;
+  -fx-background-radius: 5;
+  -fx-border-radius: 5;
+  -fx-cursor: hand;
+  /* -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 16, 0, 0, 0); */
+}
+
+.sound-cell:hover {
+  /* -fx-background-color: -fx-accent; */
+}
+
+.sound-cell:selected {
+  /* -fx-background-color: -fx-accent; */
+}
+
+.sound-cell-icon-pane {
+  -fx-alignment: center;
+}
+
+.sound-cell-name-pane {
+  -fx-alignment: center;
+}
+
+.sound-cell-input-binding-pane {
+  -fx-alignment: center;
+}
+
 /* Settings view styles */
 
 .settings-view {

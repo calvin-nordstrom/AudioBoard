@@ -26,4 +26,16 @@ public class SoundListViewModel {
     public ObjectProperty<SoundViewModel> selectedSoundProperty() {
         return selectedSound;
     }
+
+    public void selectSound(int index) {
+        selectedSound.set(sounds.get(index));
+    }
+
+    public void selectFirstSound() {
+        selectedSound.set(sounds.getFirst());
+    }
+
+    public void selectLastSound() {
+        selectedSound.set(sounds.getLast());
+    }
 }
