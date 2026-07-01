@@ -1,7 +1,6 @@
 package com.calvinnordstrom.audioboard.view;
 
 import com.calvinnordstrom.audioboard.input.InputBinding;
-import com.calvinnordstrom.audioboard.util.Resources;
 import com.calvinnordstrom.audioboard.viewmodel.SoundViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -11,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 import java.nio.file.Path;
+
+import static com.calvinnordstrom.audioboard.util.Resources.getImage;
 
 public class SoundCell extends ListCell<SoundViewModel> {
     private final ImageView image = new ImageView();
@@ -29,9 +30,9 @@ public class SoundCell extends ListCell<SoundViewModel> {
 
         image.imageProperty().unbind();
         ObjectProperty<Path> iconPath = item.iconPathProperty();
-        image.setImage(Resources.getImage(iconPath.get()));
+        image.setImage(getImage(iconPath.get()));
         iconPath.addListener((_, _, newValue) -> {
-            image.setImage(Resources.getImage(newValue));
+            image.setImage(getImage(newValue));
         });
 
         name.textProperty().unbind();

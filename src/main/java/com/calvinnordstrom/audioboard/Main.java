@@ -2,7 +2,6 @@ package com.calvinnordstrom.audioboard;
 
 import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.model.MainModel;
-import com.calvinnordstrom.audioboard.util.Resources;
 import com.calvinnordstrom.audioboard.view.MainView;
 import com.calvinnordstrom.audioboard.viewmodel.MainViewModel;
 import javafx.application.Application;
@@ -10,6 +9,8 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import static com.calvinnordstrom.audioboard.util.Resources.getResource;
 
 public class Main extends Application {
     private static final String TITLE = "AudioBoard";
@@ -32,7 +33,7 @@ public class Main extends Application {
         model.start();
 
         Scene scene = new Scene((Parent) view.asNode());
-        scene.getStylesheets().add(Resources.STYLES);
+        scene.getStylesheets().add(getResource("css/styles.css"));
 
         stage.setScene(scene);
         stage.setTitle(TITLE + " " + VERSION);

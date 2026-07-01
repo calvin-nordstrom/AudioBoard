@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 public final class Resources {
-    public static final String STYLES = getResource("css/styles.css");
     public static final String DEFAULT_ICON = getResource("icons/default_icon.png");
 
     private Resources() {
