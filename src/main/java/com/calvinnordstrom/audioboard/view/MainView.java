@@ -26,7 +26,6 @@ public class MainView {
         view.setCenter(soundListView.asNode());
     }
 
-
     public Node asNode() {
         return view;
     }
