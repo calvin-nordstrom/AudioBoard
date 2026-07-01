@@ -13,6 +13,7 @@ public class MainModel {
     private final List<Sound> sounds = new ArrayList<>();
     private final Settings settings = new Settings(new InputBinding(Input.Source.DESKTOP, "Space"), true);
     private final AudioEngine virtualEngine;
+    private final AudioEngine playbackEngine;
     private final AudioEngine localEngine;
     private final InputRouter inputRouter;
     private final InputHandler inputHandler;
@@ -54,6 +55,12 @@ public class MainModel {
                 )
         );
 
+        playbackEngine = new AudioEngine(
+                new LocalAudioMixer(
+                        AudioUtils.getSourceByName("Logitech PRO X Gaming Headset")
+                )
+        );
+
         inputRouter = new InputRouter(sounds, settings, virtualEngine, localEngine);
         inputHandler = new InputHandler();
         inputHandler.addListener(inputRouter::route);
@@ -62,12 +69,14 @@ public class MainModel {
     public void start() {
         virtualEngine.start();
         localEngine.start();
+        playbackEngine.start();
         inputHandler.start();
     }
 
     public void stop() {
         virtualEngine.stop();
         localEngine.stop();
+        playbackEngine.stop();
         inputHandler.stop();
     }
 
@@ -77,6 +86,18 @@ public class MainModel {
 
     public void removeInputListener(Consumer<Input> listener) {
         inputHandler.removeListener(listener);
+    }
+
+    public AudioEngine getVirtualEngine() {
+        return virtualEngine;
+    }
+
+    public AudioEngine getLocalEngine() {
+        return localEngine;
+    }
+
+    public AudioEngine getPlaybackEngine() {
+        return playbackEngine;
     }
 
     public List<Sound> getSounds() {

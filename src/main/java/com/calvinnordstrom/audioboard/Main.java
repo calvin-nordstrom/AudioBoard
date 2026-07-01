@@ -20,10 +20,7 @@ public class Main extends Application {
     private static final double MIN_HEIGHT = 540;
     private final MainModel model = new MainModel();
     private final MainController controller = new MainController(model);
-    private final MainViewModel viewModel = new MainViewModel(
-            model.getSounds(),
-            model.getSettings()
-    );
+    private final MainViewModel viewModel = new MainViewModel(model);
     private final MainView view = new MainView(viewModel, controller);
 
     @Override

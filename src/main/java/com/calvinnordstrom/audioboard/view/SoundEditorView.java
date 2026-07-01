@@ -3,7 +3,6 @@ package com.calvinnordstrom.audioboard.view;
 import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
-import com.calvinnordstrom.audioboard.util.Resources;
 import com.calvinnordstrom.audioboard.view.control.BooleanControl;
 import com.calvinnordstrom.audioboard.view.control.FloatRangeControl;
 import com.calvinnordstrom.audioboard.view.control.PathControl;
@@ -23,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.nio.file.Path;
+
+import static com.calvinnordstrom.audioboard.util.Resources.getImage;
 
 public class SoundEditorView {
     private final SoundListViewModel model;
@@ -59,10 +60,8 @@ public class SoundEditorView {
         iconImage.setFitHeight(200);
         iconImage.setSmooth(true);
         ObjectProperty<Path> iconPath = sound.iconPathProperty();
-        iconImage.setImage(Resources.getImage(iconPath.get()));
-        iconPath.addListener((_, _, newValue) -> {
-            iconImage.setImage(Resources.getImage(newValue));
-        });
+        iconImage.setImage(getImage(iconPath.get()));
+        iconPath.addListener((_, _, newValue) -> iconImage.setImage(getImage(newValue)));
         HBox iconPane = new HBox(iconImage);
 
         StringControl nameControl = new StringControl(
@@ -102,10 +101,8 @@ public class SoundEditorView {
                         sound.waitingForInputProperty()
                 )
         );
-        inputBindingButton.setOnMousePressed(e -> {
-            sound.beginRebinding();
-        });
-        VBox inputBindingVBox = new VBox(inputBindingLabel, inputBindingButton);
+        inputBindingButton.setOnMousePressed(_ -> sound.beginRebinding());
+        VBox inputBindingControlsPane = new VBox(inputBindingLabel, inputBindingButton);
 
         FloatRangeControl volumeControl = new FloatRangeControl(
                 "Volume",
@@ -122,21 +119,34 @@ public class SoundEditorView {
                 sound.enabledProperty()
         );
 
+        Button playButton = new Button("Play");
+        playButton.setOnMousePressed(_ -> sound.playSound());
+        Button stopButton = new Button("Stop");
+        stopButton.setOnMousePressed(_ -> sound.stopSound());
+        HBox playbackControlsPane = new HBox(playButton, stopButton);
+
         view.getChildren().addAll(
                 iconPane,
                 nameControl.asNode(),
                 iconControl.asNode(),
                 soundControl.asNode(),
-                inputBindingVBox,
+                inputBindingControlsPane,
                 volumeControl.asNode(),
-                enabledControl.asNode()
+                enabledControl.asNode(),
+                playbackControlsPane
         );
 
         // Styles
 
         HBox.setHgrow(iconPane, Priority.ALWAYS);
 
+        playButton.setMaxWidth(Double.MAX_VALUE);
+        stopButton.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(playButton, Priority.ALWAYS);
+        HBox.setHgrow(stopButton, Priority.ALWAYS);
+
         iconPane.getStyleClass().add("sound-editor-view-icon-pane");
+        playbackControlsPane.getStyleClass().add("sound-editor-view-playback-controls-pane");
     }
 
     private void handleInput(Input input) {

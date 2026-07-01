@@ -1,4 +1,7 @@
 package com.calvinnordstrom.audioboard.audio;
 
-public sealed interface AudioCommand permits PlaySampleCommand, StopAllSoundsCommand {
+public sealed interface AudioCommand permits
+        PlaySampleCommand,
+        StopSampleCommand,
+        StopAllSoundsCommand {
 }

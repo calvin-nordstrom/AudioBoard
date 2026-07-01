@@ -25,6 +25,16 @@ public abstract class AbstractAudioMixer {
         return new PlayingSound(activeSound);
     }
 
+    public void stopSound(SoundAsset soundAsset) {
+        for (ActiveSound activeSound : activeSounds) {
+            if (activeSound.getSoundAsset() == soundAsset) {
+                activeSound.stop();
+                activeSounds.remove(activeSound);
+                return;
+            }
+        }
+    }
+
     public void stopAllSounds() {
         for (ActiveSound activeSound : activeSounds) {
             activeSound.stop();

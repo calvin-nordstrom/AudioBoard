@@ -53,6 +53,10 @@
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 16, 0, 0, 0);
 }
 
+.sound-editor-view-playback-controls-pane {
+  -fx-spacing: 10;
+}
+
 /* Settings view styles */
 
 .settings-view {

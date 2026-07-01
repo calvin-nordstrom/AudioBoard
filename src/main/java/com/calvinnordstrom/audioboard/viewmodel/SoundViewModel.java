@@ -1,6 +1,6 @@
 package com.calvinnordstrom.audioboard.viewmodel;
 
-import com.calvinnordstrom.audioboard.audio.Sound;
+import com.calvinnordstrom.audioboard.audio.*;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import javafx.beans.property.*;
@@ -9,6 +9,7 @@ import java.nio.file.Path;
 
 public class SoundViewModel {
     private final Sound model;
+    private final AudioEngine audioEngine;
     private final StringProperty name;
     private final ObjectProperty<Path> iconPath;
     private final ObjectProperty<Path> soundPath;
@@ -17,8 +18,9 @@ public class SoundViewModel {
     private final BooleanProperty enabled;
     private final BooleanProperty waitingForInput = new SimpleBooleanProperty(false);
 
-    public SoundViewModel(Sound model) {
+    public SoundViewModel(Sound model, AudioEngine audioEngine) {
         this.model = model;
+        this.audioEngine = audioEngine;
 
         name = new SimpleStringProperty(model.getName());
         iconPath = new SimpleObjectProperty<>(model.getIconPath());
@@ -49,6 +51,14 @@ public class SoundViewModel {
     public void finishRebinding(Input input) {
         inputBinding.set(new InputBinding(input.source(), input.key()));
         waitingForInput.set(false);
+    }
+
+    public void playSound() {
+        audioEngine.submit(new PlaySampleCommand(model));
+    }
+
+    public void stopSound() {
+        audioEngine.submit(new StopSampleCommand(model));
     }
 
     public StringProperty nameProperty() {

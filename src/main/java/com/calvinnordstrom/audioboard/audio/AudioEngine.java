@@ -59,6 +59,8 @@ public class AudioEngine {
                     float volume = sound.getVolume();
 
                     mixer.addSound(soundAsset, volume);
+                } else if (cmd instanceof StopSampleCommand(Sound sound)) {
+                    mixer.stopSound(sound.getSoundAsset());
                 } else if (cmd instanceof StopAllSoundsCommand) {
                     mixer.stopAllSounds();
                 }
