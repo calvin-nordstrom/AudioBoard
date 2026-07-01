@@ -73,20 +73,20 @@ public class LocalAudioMixer extends AbstractAudioMixer {
                 // Active sounds
 
                 for (ActiveSound active : activeSounds) {
-                    if (active.finished()) {
+                    if (active.isFinished()) {
                         activeSounds.remove(active);
                         continue;
                     }
 
-                    float[] pcm = active.soundAsset.pcm();
-                    int remaining = pcm.length - active.position;
+                    float[] pcm = active.getSoundAsset().pcm();
+                    int remaining = pcm.length - active.getPosition();
 
                     int count = Math.min(samplesPerChunk, remaining);
                     for (int i = 0; i < count; i++) {
-                        mixSamples[i] += pcm[active.position++] * active.volume;
+                        mixSamples[i] += pcm[active.getPositionAndIncrement()] * active.getVolume();
                     }
 
-                    if (active.finished()) {
+                    if (active.isFinished()) {
                         activeSounds.remove(active);
                     }
                 }

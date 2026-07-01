@@ -3,7 +3,7 @@ package com.calvinnordstrom.audioboard.audio;
 public class PlayingSound {
     private final ActiveSound activeSound;
 
-    PlayingSound(ActiveSound activeSound) {
+    public PlayingSound(ActiveSound activeSound) {
         this.activeSound = activeSound;
     }
 
@@ -12,6 +12,6 @@ public class PlayingSound {
     }
 
     public boolean isFinished() {
-        return activeSound.finished();
+        return activeSound.isFinished();
     }
 }
