@@ -56,9 +56,6 @@ public class SoundEditorView {
 
         ImageView iconImage = new ImageView();
         iconImage.imageProperty().unbind();
-        iconImage.setFitWidth(200);
-        iconImage.setFitHeight(200);
-        iconImage.setSmooth(true);
         ObjectProperty<Path> iconPath = sound.iconPathProperty();
         iconImage.setImage(getImage(iconPath.get()));
         iconPath.addListener((_, _, newValue) -> iconImage.setImage(getImage(newValue)));
@@ -137,6 +134,10 @@ public class SoundEditorView {
         );
 
         // Styles
+
+        iconImage.setFitWidth(200);
+        iconImage.setFitHeight(200);
+        iconImage.setSmooth(true);
 
         HBox.setHgrow(iconPane, Priority.ALWAYS);
 
