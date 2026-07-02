@@ -13,9 +13,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -125,6 +123,10 @@ public class SoundEditorView {
         stopButton.setOnMousePressed(_ -> sound.stopSound());
         HBox playbackControlsPane = new HBox(playButton, stopButton);
 
+        Button deleteButton = new Button("Delete");
+        deleteButton.setOnMousePressed(_ -> onDelete(sound));
+        HBox deletePane = new HBox(deleteButton);
+
         view.getChildren().addAll(
                 iconPane,
                 nameControl.asNode(),
@@ -133,7 +135,8 @@ public class SoundEditorView {
                 inputBindingControlsPane,
                 volumeControl.asNode(),
                 enabledControl.asNode(),
-                playbackControlsPane
+                playbackControlsPane,
+                deletePane
         );
 
         // Styles
@@ -149,8 +152,12 @@ public class SoundEditorView {
         HBox.setHgrow(playButton, Priority.ALWAYS);
         HBox.setHgrow(stopButton, Priority.ALWAYS);
 
+        HBox.setHgrow(deletePane, Priority.ALWAYS);
+
         iconPane.getStyleClass().add("sound-editor-view-icon-pane");
         playbackControlsPane.getStyleClass().add("sound-editor-view-playback-controls-pane");
+        deleteButton.getStyleClass().add("delete-button");
+        deletePane.getStyleClass().add("sound-editor-view-delete-pane");
     }
 
     private void handleInput(Input input) {
@@ -167,6 +174,26 @@ public class SoundEditorView {
         Platform.runLater(() -> {
             sound.finishRebinding(input);
         });
+    }
+
+    private void onDelete(SoundViewModel sound) {
+        Alert alert = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Delete \"" + sound.nameProperty().get() + "\"?"
+        );
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(_ -> removeSound(sound));
+    }
+
+    private void removeSound(SoundViewModel sound) {
+        model.getSounds().remove(sound);
+
+        if (!model.getSounds().isEmpty()) {
+            model.selectFirstSound();
+        } else {
+            setSound(null);
+        }
     }
 
     public Node asNode() {

@@ -15,7 +15,10 @@ public class SoundListView {
         rebuild(model);
 
         model.getSounds().addListener((ListChangeListener<SoundViewModel>) _ -> rebuild(model));
-        model.selectFirstSound();
+
+        if (!model.getSounds().isEmpty()) {
+            model.selectFirstSound();
+        }
 
         init();
     }

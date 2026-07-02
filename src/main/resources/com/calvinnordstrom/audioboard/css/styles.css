@@ -13,6 +13,8 @@
   -color-thumb: #cccccc;
 
   -color-text: #ffffff;
+
+  -color-delete-button: #c04040;
 }
 
 /* Global styles */
@@ -120,6 +122,13 @@
   -fx-background-color: derive(-color-thumb, -15%);
 }
 
+/* Generic styles */
+
+.delete-button {
+  -fx-border-color: derive(-color-delete-button, 60%);
+  -fx-background-color: -color-delete-button;
+}
+
 /* Path control styles */
 
 .path-control-file-label {
@@ -170,6 +179,10 @@
 
 .sound-editor-view-playback-controls-pane {
   -fx-spacing: 10;
+}
+
+.sound-editor-view-delete-pane {
+  -fx-alignment: center;
 }
 
 /* Sound list view styles */
