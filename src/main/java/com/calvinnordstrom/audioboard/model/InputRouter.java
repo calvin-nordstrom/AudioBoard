@@ -34,7 +34,7 @@ public class InputRouter {
 
         InputBinding binding = new InputBinding(input.source(), input.key());
 
-        if (settings.getStopSoundsBinding().equals(binding)) {
+        if (binding.equals(settings.getStopSoundsBinding())) {
             virtualEngine.submit(new StopAllSoundsCommand());
             localEngine.submit(new StopAllSoundsCommand());
             return;
@@ -45,7 +45,7 @@ public class InputRouter {
                 continue;
             }
 
-            if (!sound.getInputBinding().equals(binding)) {
+            if (!binding.equals(sound.getInputBinding())) {
                 continue;
             }
 
