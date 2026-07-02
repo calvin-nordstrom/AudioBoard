@@ -9,6 +9,7 @@ public class MainView {
     private final MainViewModel model;
     private final MainController controller;
     private final BorderPane view = new BorderPane();
+    private final MenuBarView menuBarView;
     private final SoundEditorView soundEditorView;
     private final SettingsView settingsView;
     private final SoundListView soundListView;
@@ -17,6 +18,7 @@ public class MainView {
         this.model = model;
         this.controller = controller;
 
+        menuBarView = new MenuBarView(model, controller);
         soundEditorView = new SoundEditorView(model.getSounds(), controller);
         settingsView = new SettingsView(model.getSettings(), controller);
         soundListView = new SoundListView(model.getSounds());
@@ -35,6 +37,7 @@ public class MainView {
             }
         });
 
+        view.setTop(menuBarView.asNode());
         view.setLeft(soundEditorView.asNode());
         view.setBottom(settingsView.asNode());
         view.setCenter(soundListView.asNode());

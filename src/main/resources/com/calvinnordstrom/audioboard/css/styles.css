@@ -127,6 +127,55 @@
   -fx-background-color: derive(-color-thumb, -15%);
 }
 
+.menu-bar {
+  -fx-padding: 0 10 0 10;
+  -fx-border-style: solid;
+  -fx-border-width: 0 0 1 0;
+  -fx-border-color: -color-border-1;
+  -fx-background-color: -color-background-2;
+}
+
+.menu-bar > .container > .menu-button {
+  -fx-padding: 5 10 5 10;
+}
+
+.menu-bar > .container > .menu-button:hover {
+  -fx-background-color: derive(-color-surface-2, 20%);
+}
+
+.menu-bar > .container > .menu-button:showing {
+  -fx-background-color: derive(-color-surface-2, -15%);
+}
+
+.menu-bar > .container > .menu-button > .label {
+  -fx-text-fill: -color-text;
+}
+
+.context-menu {
+  -fx-padding: 5;
+  -fx-border-radius: 5;
+  -fx-border-color: -color-border-2;
+  -fx-background-radius: 5;
+  -fx-background-color: -color-background-2;
+}
+
+.menu-item {
+  -fx-background-radius: 5;
+  -fx-padding: 5 10 5 10;
+}
+
+.menu-item > .label {
+  -fx-text-fill: -color-text;
+}
+
+.menu-item:focused {
+  -fx-background-color: derive(-color-surface-2, 20%);
+}
+
+.menu-item:pressed {
+  -fx-background-color: derive(-color-surface-2, -15%);
+}
+
 /* Generic styles */
 
 .delete-button {
