@@ -104,10 +104,6 @@
   -fx-padding: 0;
 }
 
-.slider {
-  /* -fx-padding: 4 0 4 0; */
-}
-
 .slider .track {
   -fx-background-color: -color-surface-1;
 }
