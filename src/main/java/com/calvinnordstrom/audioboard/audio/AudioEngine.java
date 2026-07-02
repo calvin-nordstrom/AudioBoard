@@ -54,15 +54,17 @@ public class AudioEngine {
             try {
                 AudioCommand cmd = commandQueue.take();
 
-                if (cmd instanceof PlaySampleCommand(Sound sound)) {
-                    SoundAsset soundAsset = sound.getSoundAsset();
-                    float volume = sound.getVolume();
+                switch (cmd) {
+                    case PlaySampleCommand(Sound sound) -> {
+                        SoundAsset soundAsset = sound.getSoundAsset();
+                        float volume = sound.getVolume();
 
-                    mixer.addSound(soundAsset, volume);
-                } else if (cmd instanceof StopSampleCommand(Sound sound)) {
-                    mixer.stopSound(sound.getSoundAsset());
-                } else if (cmd instanceof StopAllSoundsCommand) {
-                    mixer.stopAllSounds();
+                        mixer.addSound(soundAsset, volume);
+                    }
+                    case StopSampleCommand(Sound sound) -> mixer.stopSound(sound.getSoundAsset());
+                    case StopAllSoundsCommand stopAllSoundsCommand -> mixer.stopAllSounds();
+                    default -> {
+                    }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
