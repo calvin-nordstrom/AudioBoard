@@ -30,7 +30,6 @@ public abstract class AbstractAudioMixer {
             if (activeSound.getSoundAsset() == soundAsset) {
                 activeSound.stop();
                 activeSounds.remove(activeSound);
-                return;
             }
         }
     }
