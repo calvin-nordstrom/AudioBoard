@@ -15,6 +15,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -29,6 +30,7 @@ public class SoundEditorView {
     private final SoundListViewModel model;
     private final MainController controller;
     private final VBox view = new VBox();
+    private final ScrollPane scrollPane = new ScrollPane(view);
 
     public SoundEditorView(SoundListViewModel model, MainController controller) {
         this.model = model;
@@ -44,6 +46,7 @@ public class SoundEditorView {
         // Styles
 
         view.getStyleClass().add("sound-editor-view");
+        scrollPane.getStyleClass().add("sound-editor-view-scroll-pane");
     }
 
     private void setSound(SoundViewModel sound) {
@@ -167,6 +170,6 @@ public class SoundEditorView {
     }
 
     public Node asNode() {
-        return view;
+        return scrollPane;
     }
 }
