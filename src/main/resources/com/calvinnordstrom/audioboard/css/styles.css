@@ -234,6 +234,11 @@
   -fx-border-color: -color-border-1;
 }
 
+.sound-editor-view-scroll-pane:focused {
+  -fx-background-insets: 0 0 0 0;
+  -fx-background-radius: 0 0 0 0;
+}
+
 .sound-editor-view-icon-pane {
   -fx-alignment: center;
   -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 16, 0, 0, 0);
@@ -324,4 +329,17 @@
 
 .settings-node {
   -fx-alignment: center-left;
+}
+
+/* Sound creator view styles */
+
+.sound-creator-view {
+  -fx-pref-width: 250;
+  -fx-padding: 10;
+  -fx-spacing: 10;
+  -fx-background-color: -color-background-2;
+}
+
+.sound-creator-view-controls-pane {
+  -fx-spacing: 10;
 }

@@ -21,17 +21,29 @@ public class MenuBarView {
     }
 
     private void initFileMenu() {
-        MenuItem fileExit = new MenuItem("Exit");
-        fileExit.setOnAction(_ -> Platform.exit());
+        MenuItem newSound = new MenuItem("New sound...");
+        newSound.setOnAction(_ -> {
+            SoundCreatorView soundCreator = new SoundCreatorView(
+                    model.getSounds(),
+                    view.getScene() != null
+                            ? view.getScene().getWindow()
+                            : null
+            );
+            soundCreator.show();
+        });
 
-        Menu fileMenu = new Menu(
+        MenuItem exit = new MenuItem("Exit");
+        exit.setOnAction(_ -> Platform.exit());
+
+        Menu menu = new Menu(
                 "File",
                 null,
-                fileExit
+                newSound,
+                exit
         );
 
         view.getMenus().addAll(
-                fileMenu
+                menu
         );
     }
 

@@ -61,6 +61,10 @@ public class SoundViewModel {
         audioEngine.submit(new StopSampleCommand(model));
     }
 
+    Sound getModel() {
+        return model;
+    }
+
     public StringProperty nameProperty() {
         return name;
     }
