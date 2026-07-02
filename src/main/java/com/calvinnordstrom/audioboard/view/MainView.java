@@ -21,6 +21,20 @@ public class MainView {
         settingsView = new SettingsView(model.getSettings(), controller);
         soundListView = new SoundListView(model.getSounds());
 
+        init();
+    }
+
+    private void init() {
+        model.getSounds().selectedSoundProperty().addListener((_, _, _) -> {
+            view.requestFocus();
+        });
+
+        view.sceneProperty().addListener((_, _, newValue) -> {
+            if (newValue != null) {
+                view.requestFocus();
+            }
+        });
+
         view.setLeft(soundEditorView.asNode());
         view.setBottom(settingsView.asNode());
         view.setCenter(soundListView.asNode());
