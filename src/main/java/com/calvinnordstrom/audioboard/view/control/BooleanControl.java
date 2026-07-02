@@ -21,8 +21,7 @@ public class BooleanControl {
 
     private void init() {
         CheckBox checkBox = new CheckBox(title);
-        checkBox.setSelected(valueProperty.get());
-        checkBox.selectedProperty().addListener((_, _, newValue) -> valueProperty.set(newValue));
+        checkBox.selectedProperty().bindBidirectional(valueProperty);
 
         view.getChildren().addAll(checkBox);
     }
