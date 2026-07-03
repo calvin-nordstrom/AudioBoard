@@ -2,15 +2,20 @@ package com.calvinnordstrom.audioboard.viewmodel;
 
 import com.calvinnordstrom.audioboard.model.MainModel;
 
+import java.util.function.Consumer;
+
 public class MainViewModel {
     private final MainModel model;
+    private final Consumer<Object> onChanged;
     private final SoundListViewModel sounds;
     private final SettingsViewModel settings;
 
-    public MainViewModel(MainModel model) {
+    public MainViewModel(MainModel model, Consumer<Object> onChanged) {
         this.model = model;
-        this.sounds = new SoundListViewModel(model.getSounds(), model.getPlaybackEngine());
-        this.settings = new SettingsViewModel(model.getSettings());
+        this.onChanged = onChanged;
+
+        sounds = new SoundListViewModel(model.getSounds(), model.getPlaybackEngine(), onChanged);
+        settings = new SettingsViewModel(model.getSettings(), onChanged);
     }
 
     public SoundListViewModel getSounds() {

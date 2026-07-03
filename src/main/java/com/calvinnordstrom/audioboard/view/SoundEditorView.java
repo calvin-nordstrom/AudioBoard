@@ -4,8 +4,8 @@ import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import com.calvinnordstrom.audioboard.view.control.BooleanControl;
+import com.calvinnordstrom.audioboard.view.control.FileControl;
 import com.calvinnordstrom.audioboard.view.control.FloatRangeControl;
-import com.calvinnordstrom.audioboard.view.control.PathControl;
 import com.calvinnordstrom.audioboard.view.control.StringControl;
 import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
 import com.calvinnordstrom.audioboard.viewmodel.SoundViewModel;
@@ -20,9 +20,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
-import java.nio.file.Path;
+import java.io.File;
 
-import static com.calvinnordstrom.audioboard.util.Resources.getImage;
+import static com.calvinnordstrom.audioboard.data.Resources.getImage;
 
 public class SoundEditorView {
     private final SoundListViewModel model;
@@ -57,9 +57,9 @@ public class SoundEditorView {
 
         ImageView iconImage = new ImageView();
         iconImage.imageProperty().unbind();
-        ObjectProperty<Path> iconPath = sound.iconPathProperty();
-        iconImage.setImage(getImage(iconPath.get()));
-        iconPath.addListener((_, _, newValue) -> iconImage.setImage(getImage(newValue)));
+        ObjectProperty<File> iconFile = sound.iconFileProperty();
+        iconImage.setImage(getImage(iconFile.get()));
+        iconFile.addListener((_, _, newValue) -> iconImage.setImage(getImage(newValue)));
         HBox iconPane = new HBox(iconImage);
 
         StringControl nameControl = new StringControl(
@@ -67,15 +67,15 @@ public class SoundEditorView {
                 sound.nameProperty()
         );
 
-        PathControl iconControl = new PathControl(
+        FileControl iconControl = new FileControl(
                 "Icon",
-                sound.iconPathProperty(),
+                sound.iconFileProperty(),
                 new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.bmp")
         );
 
-        PathControl soundControl = new PathControl(
+        FileControl soundControl = new FileControl(
                 "Sound",
-                sound.soundPathProperty(),
+                sound.soundFileProperty(),
                 new FileChooser.ExtensionFilter("WAV Files", "*.wav")
         );
 

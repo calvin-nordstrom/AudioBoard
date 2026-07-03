@@ -1,6 +1,8 @@
 package com.calvinnordstrom.audioboard.input;
 
-public record Input(Source source, State state, String key) {
+import java.io.Serializable;
+
+public record Input(Source source, State state, String key) implements Serializable {
     public enum Source {
         KEYPAD,
         DESKTOP

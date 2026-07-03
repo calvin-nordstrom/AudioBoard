@@ -191,13 +191,13 @@
   -fx-background-color: derive(-color-delete-button, -15%);
 }
 
-/* Path control styles */
+/* File control styles */
 
-.path-control-file-label {
+.file-control-file-label {
   -fx-alignment: center-left;
 }
 
-.path-control-file-pane {
+.file-control-file-pane {
   -fx-alignment: center-left;
   -fx-spacing: 5;
 }

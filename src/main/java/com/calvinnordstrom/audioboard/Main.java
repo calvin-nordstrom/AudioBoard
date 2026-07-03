@@ -10,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import static com.calvinnordstrom.audioboard.util.Resources.getResource;
+import static com.calvinnordstrom.audioboard.data.Resources.getResource;
 
 public class Main extends Application {
     private static final String TITLE = "AudioBoard";
@@ -21,7 +21,7 @@ public class Main extends Application {
     private static final double MIN_HEIGHT = 540;
     private final MainModel model = new MainModel();
     private final MainController controller = new MainController(model);
-    private final MainViewModel viewModel = new MainViewModel(model);
+    private final MainViewModel viewModel = new MainViewModel(model, model.getChangeHandler());
     private final MainView view = new MainView(viewModel, controller);
 
     @Override

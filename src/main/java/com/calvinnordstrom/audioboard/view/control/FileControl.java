@@ -12,17 +12,16 @@ import javafx.stage.FileChooser;
 import javafx.stage.Window;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Objects;
 
-public class PathControl {
+public class FileControl {
     private final String title;
-    private final ObjectProperty<Path> valueProperty;
+    private final ObjectProperty<File> valueProperty;
     private final FileChooser.ExtensionFilter filter;
     private final VBox view = new VBox();
     private final Tooltip fileLabelTooltip = new Tooltip();
 
-    public PathControl(String title, ObjectProperty<Path> valueProperty, FileChooser.ExtensionFilter filter) {
+    public FileControl(String title, ObjectProperty<File> valueProperty, FileChooser.ExtensionFilter filter) {
         this.title = Objects.requireNonNull(title);
         this.valueProperty = Objects.requireNonNull(valueProperty);
         this.filter = Objects.requireNonNull(filter);
@@ -44,20 +43,20 @@ public class PathControl {
             File selectedFile = fileChooser.showOpenDialog(owner);
 
             if (selectedFile != null) {
-                valueProperty.set(selectedFile.toPath());
+                valueProperty.set(selectedFile);
             }
         });
 
         Label fileLabel = new Label(valueProperty.get() == null
                 ? "No file selected"
-                : valueProperty.get().getFileName().toString()
+                : valueProperty.get().getName()
         );
         fileLabelTooltip.setText(fileLabel.getText());
 
         HBox filePane = new HBox(fileButton, fileLabel);
 
         valueProperty.addListener((_, _, newValue) -> {
-            String newName = newValue.getFileName().toString();
+            String newName = newValue.getName();
             fileLabel.setText(newName);
             fileLabelTooltip.setText(newName);
         });
@@ -66,8 +65,8 @@ public class PathControl {
 
         // Styles
 
-        fileLabel.getStyleClass().add("path-control-file-label");
-        filePane.getStyleClass().add("path-control-file-pane");
+        fileLabel.getStyleClass().add("file-control-file-label");
+        filePane.getStyleClass().add("file-control-file-pane");
     }
 
     public Node asNode() {

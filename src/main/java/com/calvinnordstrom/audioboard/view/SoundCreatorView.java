@@ -1,6 +1,6 @@
 package com.calvinnordstrom.audioboard.view;
 
-import com.calvinnordstrom.audioboard.view.control.PathControl;
+import com.calvinnordstrom.audioboard.view.control.FileControl;
 import com.calvinnordstrom.audioboard.viewmodel.SoundListViewModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,9 +14,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.nio.file.Path;
+import java.io.File;
 
-import static com.calvinnordstrom.audioboard.util.Resources.getResource;
+import static com.calvinnordstrom.audioboard.data.Resources.getResource;
 
 public class SoundCreatorView {
     private static final String TITLE = "Upload Sound";
@@ -42,17 +42,17 @@ public class SoundCreatorView {
         stage.setTitle(TITLE);
         stage.setResizable(false);
 
-        ObjectProperty<Path> soundPathProperty = new SimpleObjectProperty<>();
-        PathControl soundControl = new PathControl(
+        ObjectProperty<File> soundFileProperty = new SimpleObjectProperty<>();
+        FileControl soundControl = new FileControl(
                 "Sound",
-                soundPathProperty,
+                soundFileProperty,
                 new FileChooser.ExtensionFilter("WAV Files", "*.wav")
         );
 
         Button okButton = new Button("OK");
         okButton.setDisable(true);
         okButton.setOnMousePressed(_ -> {
-            model.addSoundByPath(soundPathProperty.getValue());
+            model.addSoundByFile(soundFileProperty.getValue());
             model.selectLastSound();
             hide();
         });
@@ -62,7 +62,7 @@ public class SoundCreatorView {
         });
         HBox controlsPane = new HBox(okButton, cancelButton);
 
-        soundPathProperty.addListener((_, _, newValue) -> {
+        soundFileProperty.addListener((_, _, newValue) -> {
             if (newValue != null) {
                 okButton.setDisable(false);
             }

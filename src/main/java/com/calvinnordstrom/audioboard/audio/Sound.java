@@ -2,12 +2,12 @@ package com.calvinnordstrom.audioboard.audio;
 
 import com.calvinnordstrom.audioboard.input.InputBinding;
 
-import java.nio.file.Path;
+import java.io.*;
 
-public class Sound {
+public class Sound implements Serializable {
     private String name;
-    private Path iconPath;
-    private Path soundPath;
+    private File iconFile;
+    private File soundFile;
     private InputBinding inputBinding;
     private float volume;
     private boolean enabled;
@@ -15,15 +15,15 @@ public class Sound {
 
     public Sound(
             String name,
-            Path iconPath,
-            Path soundPath,
+            File iconFile,
+            File soundFile,
             InputBinding inputBinding,
             float volume,
             boolean enabled
     ) {
         this.name = name;
-        this.iconPath = iconPath;
-        this.soundPath = soundPath;
+        this.iconFile = iconFile;
+        this.soundFile = soundFile;
         this.inputBinding = inputBinding;
         this.volume = volume;
         this.enabled = enabled;
@@ -32,7 +32,7 @@ public class Sound {
     }
 
     public void reloadSound() {
-        soundAsset = soundPath == null ? null : SoundLoader.load(soundPath.toFile());
+        soundAsset = soundFile == null ? null : SoundLoader.load(soundFile);
     }
 
     public String getName() {
@@ -43,20 +43,20 @@ public class Sound {
         this.name = name;
     }
 
-    public Path getIconPath() {
-        return iconPath;
+    public File getIconFile() {
+        return iconFile;
     }
 
-    public void setIconPath(Path iconPath) {
-        this.iconPath = iconPath;
+    public void setIconFile(File iconFile) {
+        this.iconFile = iconFile;
     }
 
-    public Path getSoundPath() {
-        return soundPath;
+    public File getSoundFile() {
+        return soundFile;
     }
 
-    public void setSoundPath(Path soundPath) {
-        this.soundPath = soundPath;
+    public void setSoundFile(File soundFile) {
+        this.soundFile = soundFile;
     }
 
     public InputBinding getInputBinding() {
@@ -85,5 +85,11 @@ public class Sound {
 
     public SoundAsset getSoundAsset() {
         return soundAsset;
+    }
+
+    @Serial
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        reloadSound();
     }
 }

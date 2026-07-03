@@ -1,30 +1,36 @@
 package com.calvinnordstrom.audioboard.viewmodel;
 
-import com.calvinnordstrom.audioboard.audio.*;
+import com.calvinnordstrom.audioboard.audio.AudioEngine;
+import com.calvinnordstrom.audioboard.audio.PlaySampleCommand;
+import com.calvinnordstrom.audioboard.audio.Sound;
+import com.calvinnordstrom.audioboard.audio.StopSampleCommand;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import javafx.beans.property.*;
 
-import java.nio.file.Path;
+import java.io.File;
+import java.util.function.Consumer;
 
 public class SoundViewModel {
     private final Sound model;
     private final AudioEngine audioEngine;
+    private final Consumer<Object> onChanged;
     private final StringProperty name;
-    private final ObjectProperty<Path> iconPath;
-    private final ObjectProperty<Path> soundPath;
+    private final ObjectProperty<File> iconFile;
+    private final ObjectProperty<File> soundFile;
     private final ObjectProperty<InputBinding> inputBinding;
     private final FloatProperty volume;
     private final BooleanProperty enabled;
     private final BooleanProperty waitingForInput = new SimpleBooleanProperty(false);
 
-    public SoundViewModel(Sound model, AudioEngine audioEngine) {
+    public SoundViewModel(Sound model, AudioEngine audioEngine, Consumer<Object> onChanged) {
         this.model = model;
         this.audioEngine = audioEngine;
+        this.onChanged = onChanged;
 
         name = new SimpleStringProperty(model.getName());
-        iconPath = new SimpleObjectProperty<>(model.getIconPath());
-        soundPath = new SimpleObjectProperty<>(model.getSoundPath());
+        iconFile = new SimpleObjectProperty<>(model.getIconFile());
+        soundFile = new SimpleObjectProperty<>(model.getSoundFile());
         inputBinding = new SimpleObjectProperty<>(model.getInputBinding());
         volume = new SimpleFloatProperty(model.getVolume());
         enabled = new SimpleBooleanProperty(model.isEnabled());
@@ -33,15 +39,31 @@ public class SoundViewModel {
     }
 
     private void bindBackToModel() {
-        name.addListener((_, _, newValue) -> model.setName(newValue));
-        iconPath.addListener((_, _, newValue) -> model.setIconPath(newValue));
-        soundPath.addListener((_, _, newValue) -> {
-            model.setSoundPath(newValue);
-            model.reloadSound();
+        name.addListener((_, _, newValue) -> {
+            model.setName(newValue);
+            onChanged.accept(newValue);
         });
-        inputBinding.addListener((_, _, newValue) -> model.setInputBinding(newValue));
-        volume.addListener((_, _, newValue) -> model.setVolume(newValue.floatValue()));
-        enabled.addListener((_, _, newValue) -> model.setEnabled(newValue));
+        iconFile.addListener((_, _, newValue) -> {
+            model.setIconFile(newValue);
+            onChanged.accept(newValue);
+        });
+        soundFile.addListener((_, _, newValue) -> {
+            model.setSoundFile(newValue);
+            model.reloadSound();
+            onChanged.accept(newValue);
+        });
+        inputBinding.addListener((_, _, newValue) -> {
+            model.setInputBinding(newValue);
+            onChanged.accept(newValue);
+        });
+        volume.addListener((_, _, newValue) -> {
+            model.setVolume(newValue.floatValue());
+            onChanged.accept(newValue);
+        });
+        enabled.addListener((_, _, newValue) -> {
+            model.setEnabled(newValue);
+            onChanged.accept(newValue);
+        });
     }
 
     public void beginRebinding() {
@@ -69,12 +91,12 @@ public class SoundViewModel {
         return name;
     }
 
-    public ObjectProperty<Path> iconPathProperty() {
-        return iconPath;
+    public ObjectProperty<File> iconFileProperty() {
+        return iconFile;
     }
 
-    public ObjectProperty<Path> soundPathProperty() {
-        return soundPath;
+    public ObjectProperty<File> soundFileProperty() {
+        return soundFile;
     }
 
     public ObjectProperty<InputBinding> inputBindingProperty() {

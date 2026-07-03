@@ -8,21 +8,28 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SoundListViewModel {
     private final List<Sound> model;
     private final AudioEngine audioEngine;
+    private final Consumer<Object> onChanged;
     private final ObservableList<SoundViewModel> sounds = FXCollections.observableArrayList();
     private final ObjectProperty<SoundViewModel> selectedSound = new SimpleObjectProperty<>();
 
-    public SoundListViewModel(List<Sound> model, AudioEngine audioEngine) {
+    public SoundListViewModel(
+            List<Sound> model,
+            AudioEngine audioEngine,
+            Consumer<Object> onChanged
+    ) {
         this.model = model;
         this.audioEngine = audioEngine;
+        this.onChanged = onChanged;
 
         for (Sound sound : model) {
-            this.sounds.add(new SoundViewModel(sound, audioEngine));
+            this.sounds.add(new SoundViewModel(sound, audioEngine, onChanged));
         }
 
         bindBackToModel();
@@ -34,15 +41,8 @@ public class SoundListViewModel {
             for (SoundViewModel sound : sounds) {
                 model.add(sound.getModel());
             }
+            onChanged.accept(model);
         });
-    }
-
-    public ObservableList<SoundViewModel> getSounds() {
-        return sounds;
-    }
-
-    public ObjectProperty<SoundViewModel> selectedSoundProperty() {
-        return selectedSound;
     }
 
     public void selectSound(int index) {
@@ -57,16 +57,24 @@ public class SoundListViewModel {
         selectedSound.set(sounds.getLast());
     }
 
-    public void addSoundByPath(Path soundPath) {
+    public void addSoundByFile(File soundFile) {
         Sound sound = new Sound(
                 "New Sound",
                 null,
-                soundPath,
+                soundFile,
                 null,
                 0.8f,
                 true
         );
 
-        sounds.add(new SoundViewModel(sound, audioEngine));
+        sounds.add(new SoundViewModel(sound, audioEngine, onChanged));
+    }
+
+    public ObservableList<SoundViewModel> getSounds() {
+        return sounds;
+    }
+
+    public ObjectProperty<SoundViewModel> selectedSoundProperty() {
+        return selectedSound;
     }
 }

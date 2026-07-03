@@ -1,10 +1,10 @@
-package com.calvinnordstrom.audioboard.util;
+package com.calvinnordstrom.audioboard.data;
 
 import com.calvinnordstrom.audioboard.Main;
 import javafx.scene.image.Image;
 
+import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Objects;
 
 public final class Resources {
@@ -20,9 +20,9 @@ public final class Resources {
         ).toExternalForm();
     }
 
-    public static Image getImage(Path path) {
-        if (path != null && Files.isRegularFile(path)) {
-            return new Image(path.toUri().toString());
+    public static Image getImage(File file) {
+        if (file != null && Files.isRegularFile(file.toPath())) {
+            return new Image(file.toPath().toUri().toString());
         }
 
         return new Image(DEFAULT_ICON);

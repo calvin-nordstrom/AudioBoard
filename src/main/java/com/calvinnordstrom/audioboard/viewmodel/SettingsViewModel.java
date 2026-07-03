@@ -8,14 +8,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.function.Consumer;
+
 public class SettingsViewModel {
     private final Settings model;
+    private final Consumer<Object> onChanged;
     private final ObjectProperty<InputBinding> stopSoundsBinding;
     private final BooleanProperty localPlaybackEnabled;
     private final BooleanProperty waitingForInput = new SimpleBooleanProperty(false);
 
-    public SettingsViewModel(Settings model) {
+    public SettingsViewModel(Settings model, Consumer<Object> onChanged) {
         this.model = model;
+        this.onChanged = onChanged;
 
         stopSoundsBinding = new SimpleObjectProperty<>(model.getStopSoundsBinding());
         localPlaybackEnabled = new SimpleBooleanProperty(model.isLocalPlaybackEnabled());
@@ -24,8 +28,14 @@ public class SettingsViewModel {
     }
 
     private void bindBackToModel() {
-        stopSoundsBinding.addListener((_, _, newValue) -> model.setStopSoundsBinding(newValue));
-        localPlaybackEnabled.addListener((_, _, newValue) -> model.setLocalPlaybackEnabled(newValue));
+        stopSoundsBinding.addListener((_, _, newValue) -> {
+            model.setStopSoundsBinding(newValue);
+            onChanged.accept(newValue);
+        });
+        localPlaybackEnabled.addListener((_, _, newValue) -> {
+            model.setLocalPlaybackEnabled(newValue);
+            onChanged.accept(newValue);
+        });
     }
 
     public void beginRebinding() {

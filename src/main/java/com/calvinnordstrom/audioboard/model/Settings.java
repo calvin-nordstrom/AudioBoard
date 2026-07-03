@@ -2,7 +2,9 @@ package com.calvinnordstrom.audioboard.model;
 
 import com.calvinnordstrom.audioboard.input.InputBinding;
 
-public class Settings {
+import java.io.Serializable;
+
+public class Settings implements Serializable {
     private InputBinding stopSoundsBinding;
     private boolean localPlaybackEnabled;
 
