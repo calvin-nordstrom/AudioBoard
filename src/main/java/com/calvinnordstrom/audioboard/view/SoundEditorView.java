@@ -33,9 +33,11 @@ public class SoundEditorView {
     public SoundEditorView(SoundListViewModel model, MainController controller) {
         this.model = model;
         this.controller = controller;
-        model.selectedSoundProperty().addListener((_, _, newValue) -> setSound(newValue));
 
+        model.selectedSoundProperty().addListener((_, _, newValue) -> setSound(newValue));
         controller.addInputListener(this::handleInput);
+
+        setFirstOrNullSound();
 
         init();
     }
@@ -51,7 +53,27 @@ public class SoundEditorView {
         view.getChildren().clear();
 
         if (sound == null) {
-            view.getChildren().add(new Label("Select a sound"));
+            Button newButton = new Button("New Sound");
+            newButton.setOnMousePressed(_ -> {
+                SoundCreatorView soundCreator = new SoundCreatorView(
+                        model,
+                        view.getScene() != null
+                                ? view.getScene().getWindow()
+                                : null
+                );
+                soundCreator.show();
+            });
+            HBox newPane = new HBox(newButton);
+
+            view.getChildren().add(newPane);
+
+            // Styles
+
+            HBox.setHgrow(newPane, Priority.ALWAYS);
+
+            newButton.getStyleClass().add("new-button");
+            newPane.getStyleClass().add("sound-editor-view-new-pane");
+
             return;
         }
 
@@ -189,6 +211,10 @@ public class SoundEditorView {
     private void removeSound(SoundViewModel sound) {
         model.getSounds().remove(sound);
 
+        setFirstOrNullSound();
+    }
+
+    private void setFirstOrNullSound() {
         if (!model.getSounds().isEmpty()) {
             model.selectFirstSound();
         } else {
