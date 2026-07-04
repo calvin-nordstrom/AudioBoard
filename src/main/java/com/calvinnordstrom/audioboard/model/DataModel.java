@@ -1,5 +1,6 @@
 package com.calvinnordstrom.audioboard.model;
 
+import com.calvinnordstrom.audioboard.audio.AudioUtils;
 import com.calvinnordstrom.audioboard.audio.Sound;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
@@ -10,7 +11,12 @@ import java.util.List;
 
 public class DataModel implements Serializable {
     private List<Sound> sounds = new ArrayList<>();
-    private Settings settings = new Settings(new InputBinding(Input.Source.DESKTOP, "Escape"), true);
+    private Settings settings = new Settings(
+            new InputBinding(Input.Source.DESKTOP, "Escape"),
+            true,
+            AudioUtils.getInputDevices().get(1).getName(),
+            AudioUtils.getOutputDevices().get(1).getName()
+    );
 
     public DataModel() {
     }

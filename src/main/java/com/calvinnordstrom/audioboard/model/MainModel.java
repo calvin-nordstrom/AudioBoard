@@ -25,20 +25,20 @@ public class MainModel {
 
         virtualEngine = new AudioEngine(
                 new AudioMixer(
-                        AudioUtils.getDefaultTarget(),
+                        AudioUtils.getTargetByName(dataModel.getSettings().getInputDevice()),
                         AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
                 )
         );
 
         localEngine = new AudioEngine(
                 new LocalAudioMixer(
-                        AudioUtils.getSourceByName("Logitech PRO X Gaming Headset")
+                        AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice())
                 )
         );
 
         playbackEngine = new AudioEngine(
                 new LocalAudioMixer(
-                        AudioUtils.getSourceByName("Logitech PRO X Gaming Headset")
+                        AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice())
                 )
         );
 
@@ -48,6 +48,7 @@ public class MainModel {
                 virtualEngine,
                 localEngine
         );
+
         inputHandler = new InputHandler();
         inputHandler.addListener(inputRouter::route);
     }

@@ -17,30 +17,36 @@ public class AudioUtils {
     private static final DataLine.Info TARGET_DATA_LINE_INFO = new DataLine.Info(TargetDataLine.class, DEFAULT_FORMAT);
     private static final DataLine.Info SOURCE_DATA_LINE_INFO = new DataLine.Info(SourceDataLine.class, DEFAULT_FORMAT);
 
-    public static TargetDataLine getDefaultTarget() {
+    public static TargetDataLine getTargetByName(String name) {
         try {
-            if (!AudioSystem.isLineSupported(TARGET_DATA_LINE_INFO)) {
+            Mixer.Info mixerInfo = getMixerInfoByName(name);
+
+            if (mixerInfo == null) {
                 return null;
             }
-            return (TargetDataLine) AudioSystem.getLine(TARGET_DATA_LINE_INFO);
+
+            Mixer mixer = AudioSystem.getMixer(mixerInfo);
+
+            return (TargetDataLine) mixer.getLine(TARGET_DATA_LINE_INFO);
         } catch (LineUnavailableException e) {
-            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public static SourceDataLine getSourceByName(String name) {
         try {
             Mixer.Info mixerInfo = getMixerInfoByName(name);
+
             if (mixerInfo == null) {
                 return null;
             }
+
             Mixer mixer = AudioSystem.getMixer(mixerInfo);
+
             return (SourceDataLine) mixer.getLine(SOURCE_DATA_LINE_INFO);
         } catch (LineUnavailableException e) {
-            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public static Mixer.Info getMixerInfoByName(String name) {

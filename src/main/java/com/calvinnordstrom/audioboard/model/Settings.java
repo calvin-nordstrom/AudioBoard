@@ -7,13 +7,19 @@ import java.io.Serializable;
 public class Settings implements Serializable {
     private InputBinding stopSoundsBinding;
     private boolean localPlaybackEnabled;
+    private String inputDevice;
+    private String outputDevice;
 
     public Settings(
             InputBinding stopSoundsBinding,
-            boolean localPlaybackEnabled
+            boolean localPlaybackEnabled,
+            String inputDevice,
+            String outputDevice
     ) {
         this.stopSoundsBinding = stopSoundsBinding;
         this.localPlaybackEnabled = localPlaybackEnabled;
+        this.inputDevice = inputDevice;
+        this.outputDevice = outputDevice;
     }
 
     public InputBinding getStopSoundsBinding() {
@@ -30,5 +36,21 @@ public class Settings implements Serializable {
 
     public void setLocalPlaybackEnabled(boolean localPlaybackEnabled) {
         this.localPlaybackEnabled = localPlaybackEnabled;
+    }
+
+    public String getInputDevice() {
+        return inputDevice;
+    }
+
+    public void setInputDevice(String inputDevice) {
+        this.inputDevice = inputDevice;
+    }
+
+    public String getOutputDevice() {
+        return outputDevice;
+    }
+
+    public void setOutputDevice(String outputDevice) {
+        this.outputDevice = outputDevice;
     }
 }

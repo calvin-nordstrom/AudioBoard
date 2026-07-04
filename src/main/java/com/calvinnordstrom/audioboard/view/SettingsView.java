@@ -1,17 +1,23 @@
 package com.calvinnordstrom.audioboard.view;
 
+import com.calvinnordstrom.audioboard.audio.AudioUtils;
 import com.calvinnordstrom.audioboard.controller.MainController;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 import com.calvinnordstrom.audioboard.view.control.BooleanControl;
+import com.calvinnordstrom.audioboard.view.control.ChoiceControl;
 import com.calvinnordstrom.audioboard.viewmodel.SettingsViewModel;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import javax.sound.sampled.Mixer;
 
 public class SettingsView {
     private final SettingsViewModel model;
@@ -53,16 +59,38 @@ public class SettingsView {
         stopSoundsBindingButton.setOnMousePressed(e -> {
             model.beginRebinding();
         });
-        VBox stopSoundsBindingVBox = new VBox(stopSoundsBindingLabel, stopSoundsBindingButton);
+        VBox stopSoundsBindingPane = new VBox(stopSoundsBindingLabel, stopSoundsBindingButton);
 
         BooleanControl localPlaybackControl = new BooleanControl(
                 "Local Playback",
                 model.localPlaybackEnabledProperty()
         );
 
+        ObservableList<String> inputDevices = FXCollections.observableArrayList();
+        for (Mixer.Info mixer : AudioUtils.getInputDevices()) {
+            inputDevices.add(mixer.getName());
+        }
+        ChoiceControl<String> inputDeviceControl = new ChoiceControl<>(
+                "Input Device",
+                model.inputDeviceProperty(),
+                inputDevices
+        );
+
+        ObservableList<String> outputDevices = FXCollections.observableArrayList();
+        for (Mixer.Info mixer : AudioUtils.getOutputDevices()) {
+            outputDevices.add(mixer.getName());
+        }
+        ChoiceControl<String> outputDeviceControl = new ChoiceControl<>(
+                "Output Device",
+                model.outputDeviceProperty(),
+                outputDevices
+        );
+
         view.getChildren().addAll(
-                stopSoundsBindingVBox,
-                localPlaybackControl.asNode()
+                stopSoundsBindingPane,
+                localPlaybackControl.asNode(),
+                inputDeviceControl.asNode(),
+                outputDeviceControl.asNode()
         );
 
         // Styles
