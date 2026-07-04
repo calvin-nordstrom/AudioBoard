@@ -65,6 +65,7 @@ public class MainModel {
         localEngine.stop();
         playbackEngine.stop();
         inputHandler.stop();
+        persistenceManager.stop();
         persistenceManager.save(dataModel);
     }
 
