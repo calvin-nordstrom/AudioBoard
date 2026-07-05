@@ -2,6 +2,7 @@ package com.calvinnordstrom.audioboard.viewmodel;
 
 import com.calvinnordstrom.audioboard.audio.AudioEngine;
 import com.calvinnordstrom.audioboard.audio.Sound;
+import com.calvinnordstrom.audioboard.model.Change;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -15,14 +16,14 @@ import java.util.function.Consumer;
 public class SoundListViewModel {
     private final List<Sound> model;
     private final AudioEngine audioEngine;
-    private final Consumer<Object> onChanged;
+    private final Consumer<Change<?>> onChanged;
     private final ObservableList<SoundViewModel> sounds = FXCollections.observableArrayList();
     private final ObjectProperty<SoundViewModel> selectedSound = new SimpleObjectProperty<>();
 
     public SoundListViewModel(
             List<Sound> model,
             AudioEngine audioEngine,
-            Consumer<Object> onChanged
+            Consumer<Change<?>> onChanged
     ) {
         this.model = model;
         this.audioEngine = audioEngine;
@@ -41,7 +42,7 @@ public class SoundListViewModel {
             for (SoundViewModel sound : sounds) {
                 model.add(sound.getModel());
             }
-            onChanged.accept(model);
+            onChanged.accept(new Change<>(model, "sounds", null, model));
         });
     }
 

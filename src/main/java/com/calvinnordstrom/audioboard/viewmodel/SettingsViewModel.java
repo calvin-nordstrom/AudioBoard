@@ -2,6 +2,7 @@ package com.calvinnordstrom.audioboard.viewmodel;
 
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
+import com.calvinnordstrom.audioboard.model.Change;
 import com.calvinnordstrom.audioboard.model.Settings;
 import javafx.beans.property.*;
 
@@ -9,14 +10,14 @@ import java.util.function.Consumer;
 
 public class SettingsViewModel {
     private final Settings model;
-    private final Consumer<Object> onChanged;
+    private final Consumer<Change<?>> onChanged;
     private final ObjectProperty<InputBinding> stopSoundsBinding;
     private final BooleanProperty localPlaybackEnabled;
     private final ObjectProperty<String> inputDevice;
     private final ObjectProperty<String> outputDevice;
     private final BooleanProperty waitingForInput = new SimpleBooleanProperty(false);
 
-    public SettingsViewModel(Settings model, Consumer<Object> onChanged) {
+    public SettingsViewModel(Settings model, Consumer<Change<?>> onChanged) {
         this.model = model;
         this.onChanged = onChanged;
 
@@ -29,21 +30,21 @@ public class SettingsViewModel {
     }
 
     private void bindBackToModel() {
-        stopSoundsBinding.addListener((_, _, newValue) -> {
+        stopSoundsBinding.addListener((_, oldValue, newValue) -> {
             model.setStopSoundsBinding(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "stopSoundsBinding", oldValue, newValue));
         });
-        localPlaybackEnabled.addListener((_, _, newValue) -> {
+        localPlaybackEnabled.addListener((_, oldValue, newValue) -> {
             model.setLocalPlaybackEnabled(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "localPlaybackEnabled", oldValue, newValue));
         });
-        inputDevice.addListener((_, _, newValue) -> {
+        inputDevice.addListener((_, oldValue, newValue) -> {
             model.setInputDevice(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "inputDevice", oldValue, newValue));
         });
-        outputDevice.addListener((_, _, newValue) -> {
+        outputDevice.addListener((_, oldValue, newValue) -> {
             model.setOutputDevice(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "outputDevice", oldValue, newValue));
         });
     }
 

@@ -18,7 +18,7 @@ public class MainModel {
     private final AudioEngine localEngine;
     private final InputRouter inputRouter;
     private final InputHandler inputHandler;
-    private final Consumer<Object> changeHandler = this::onChanged;
+    private final Consumer<Change<?>> changeHandler = this::onChanged;
 
     public MainModel() {
         dataModel = persistenceManager.load();
@@ -69,7 +69,7 @@ public class MainModel {
         persistenceManager.save(dataModel);
     }
 
-    private void onChanged(Object change) {
+    private void onChanged(Change<?> change) {
         persistenceManager.notifyChanged(dataModel);
     }
 
@@ -101,7 +101,7 @@ public class MainModel {
         return playbackEngine;
     }
 
-    public Consumer<Object> getChangeHandler() {
+    public Consumer<Change<?>> getChangeHandler() {
         return changeHandler;
     }
 }

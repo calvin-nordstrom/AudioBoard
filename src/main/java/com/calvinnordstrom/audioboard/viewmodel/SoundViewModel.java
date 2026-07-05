@@ -6,6 +6,7 @@ import com.calvinnordstrom.audioboard.audio.Sound;
 import com.calvinnordstrom.audioboard.audio.StopSampleCommand;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
+import com.calvinnordstrom.audioboard.model.Change;
 import javafx.beans.property.*;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 public class SoundViewModel {
     private final Sound model;
     private final AudioEngine audioEngine;
-    private final Consumer<Object> onChanged;
+    private final Consumer<Change<?>> onChanged;
     private final StringProperty name;
     private final ObjectProperty<File> iconFile;
     private final ObjectProperty<File> soundFile;
@@ -23,7 +24,7 @@ public class SoundViewModel {
     private final BooleanProperty enabled;
     private final BooleanProperty waitingForInput = new SimpleBooleanProperty(false);
 
-    public SoundViewModel(Sound model, AudioEngine audioEngine, Consumer<Object> onChanged) {
+    public SoundViewModel(Sound model, AudioEngine audioEngine, Consumer<Change<?>> onChanged) {
         this.model = model;
         this.audioEngine = audioEngine;
         this.onChanged = onChanged;
@@ -39,30 +40,30 @@ public class SoundViewModel {
     }
 
     private void bindBackToModel() {
-        name.addListener((_, _, newValue) -> {
+        name.addListener((_, oldValue, newValue) -> {
             model.setName(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "name", oldValue, newValue));
         });
-        iconFile.addListener((_, _, newValue) -> {
+        iconFile.addListener((_, oldValue, newValue) -> {
             model.setIconFile(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "iconFile", oldValue, newValue));
         });
-        soundFile.addListener((_, _, newValue) -> {
+        soundFile.addListener((_, oldValue, newValue) -> {
             model.setSoundFile(newValue);
             model.reloadSound();
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "soundFile", oldValue, newValue));
         });
-        inputBinding.addListener((_, _, newValue) -> {
+        inputBinding.addListener((_, oldValue, newValue) -> {
             model.setInputBinding(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "inputBinding", oldValue, newValue));
         });
-        volume.addListener((_, _, newValue) -> {
+        volume.addListener((_, oldValue, newValue) -> {
             model.setVolume(newValue.floatValue());
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "volume", oldValue, newValue));
         });
-        enabled.addListener((_, _, newValue) -> {
+        enabled.addListener((_, oldValue, newValue) -> {
             model.setEnabled(newValue);
-            onChanged.accept(newValue);
+            onChanged.accept(new Change<>(model, "enabled", oldValue, newValue));
         });
     }
 
