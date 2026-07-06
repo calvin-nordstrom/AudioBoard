@@ -1,8 +1,8 @@
 package com.calvinnordstrom.audioboard.audio;
 
-public record StopAllSoundsCommand() implements AudioCommand {
+public record ChangeInputCommand(AudioInput input) implements AudioCommand {
     @Override
     public void execute(AbstractAudioMixer mixer) {
-        mixer.stopAllSounds();
+        mixer.setInput(input);
     }
 }

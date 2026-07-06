@@ -25,20 +25,20 @@ public class MainModel {
 
         virtualEngine = new AudioEngine(
                 new AudioMixer(
-                        AudioUtils.getTargetByName(dataModel.getSettings().getInputDevice()),
-                        AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)")
+                        new JavaSoundInput(AudioUtils.getTargetByName(dataModel.getSettings().getInputDevice())),
+                        new JavaSoundOutput(AudioUtils.getSourceByName("CABLE Input (VB-Audio Virtual Cable)"), 4096)
                 )
         );
 
         localEngine = new AudioEngine(
                 new LocalAudioMixer(
-                        AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice())
+                        new JavaSoundOutput(AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice()), 4096)
                 )
         );
 
         playbackEngine = new AudioEngine(
                 new LocalAudioMixer(
-                        AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice())
+                        new JavaSoundOutput(AudioUtils.getSourceByName(dataModel.getSettings().getOutputDevice()), 4096)
                 )
         );
 
@@ -61,16 +61,42 @@ public class MainModel {
     }
 
     public void stop() {
+        persistenceManager.save(dataModel);
+
+        persistenceManager.stop();
         virtualEngine.stop();
         localEngine.stop();
         playbackEngine.stop();
         inputHandler.stop();
-        persistenceManager.stop();
-        persistenceManager.save(dataModel);
     }
 
     private void onChanged(Change<?> change) {
         persistenceManager.notifyChanged(dataModel);
+
+        if (change.property().equals("inputDevice")
+                && change.source() instanceof String inputDevice)
+        {
+            virtualEngine.submit(
+                    new ChangeInputCommand(
+                            new JavaSoundInput(AudioUtils.getTargetByName(inputDevice))
+                    )
+            );
+        }
+
+        if (change.property().equals("outputDevice")
+                && change.source() instanceof String outputDevice)
+        {
+            localEngine.submit(
+                    new ChangeOutputCommand(
+                            new JavaSoundOutput(AudioUtils.getSourceByName(outputDevice), 4096)
+                    )
+            );
+            playbackEngine.submit(
+                    new ChangeOutputCommand(
+                            new JavaSoundOutput(AudioUtils.getSourceByName(outputDevice), 4096)
+                    )
+            );
+        }
     }
 
     public void addInputListener(Consumer<Input> listener) {

@@ -1,21 +1,18 @@
 package com.calvinnordstrom.audioboard.audio;
 
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.TargetDataLine;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 
 public class AudioMixer extends AbstractAudioMixer {
     private static final String MIXER_THREAD_NAME = "AudioBoard Audio Mixer Thread";
     private static final int BUFFER_SIZE = 4096;
-    private final TargetDataLine inputLine;
-    private final SourceDataLine outputLine;
+    private AudioInput input;
+    private AudioOutput output;
 
-    public AudioMixer(TargetDataLine inputLine, SourceDataLine outputLine) {
-        this.inputLine = inputLine;
-        this.outputLine = outputLine;
+    public AudioMixer(AudioInput input, AudioOutput output) {
+        this.input = input;
+        this.output = output;
     }
 
     @Override
@@ -24,14 +21,10 @@ public class AudioMixer extends AbstractAudioMixer {
             return;
         }
 
-        validateFormats();
+        validateFormats(input.format(), output.format());
 
-        try {
-            inputLine.open();
-            outputLine.open(outputLine.getFormat(), BUFFER_SIZE);
-        } catch (LineUnavailableException e) {
-            throw new RuntimeException(e);
-        }
+        input.open();
+        output.open();
 
         running = true;
 
@@ -42,8 +35,8 @@ public class AudioMixer extends AbstractAudioMixer {
         });
         mixerThread.submit(this::mixerLoop);
 
-        inputLine.start();
-        outputLine.start();
+        input.start();
+        output.start();
     }
 
     @Override
@@ -59,16 +52,16 @@ public class AudioMixer extends AbstractAudioMixer {
 
         stopAllSounds();
 
-        inputLine.stop();
-        inputLine.close();
+        input.stop();
+        input.close();
 
-        outputLine.drain();
-        outputLine.stop();
-        outputLine.close();
+        output.drain();
+        output.stop();
+        output.close();
     }
 
     private void mixerLoop() {
-        AudioFormat format = outputLine.getFormat();
+        AudioFormat format = output.format();
         boolean bigEndian = format.isBigEndian();
         byte[] micBytes = new byte[BUFFER_SIZE];
         int samplesPerChunk = BUFFER_SIZE / 2;
@@ -78,11 +71,14 @@ public class AudioMixer extends AbstractAudioMixer {
 
         try {
             while (running) {
+                AudioInput currentInput = input;
+                AudioOutput currentOutput = output;
+
                 Arrays.fill(mixSamples, 0f);
 
                 // Microphone
 
-                int bytesRead = inputLine.read(micBytes, 0, micBytes.length);
+                int bytesRead = currentInput.read(micBytes, 0, micBytes.length);
 
                 decodePcm16(micBytes, bytesRead, micSamples, bigEndian);
 
@@ -128,17 +124,37 @@ public class AudioMixer extends AbstractAudioMixer {
 
                 encodePcm16(mixSamples, micSampleCount, outputBytes, bigEndian);
 
-                outputLine.write(outputBytes, 0, micSampleCount * 2);
+                currentOutput.write(outputBytes, 0, micSampleCount * 2);
             }
         } finally {
             running = false;
         }
     }
 
-    private void validateFormats() {
-        AudioFormat in = inputLine.getFormat();
-        AudioFormat out = outputLine.getFormat();
+    public synchronized void setInput(AudioInput newInput) {
+        newInput.open();
+        newInput.start();
 
+        AudioInput old = input;
+        input = newInput;
+
+        old.stop();
+        old.close();
+    }
+
+    public synchronized void setOutput(AudioOutput newOutput) {
+        newOutput.open();
+        newOutput.start();
+
+        AudioOutput old = output;
+        output = newOutput;
+
+        old.drain();
+        old.stop();
+        old.close();
+    }
+
+    private void validateFormats(AudioFormat in, AudioFormat out) {
         if (in.getEncoding() != AudioFormat.Encoding.PCM_SIGNED
                 || out.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
             throw new IllegalStateException("Only PCM_SIGNED is supported");
@@ -148,20 +164,13 @@ public class AudioMixer extends AbstractAudioMixer {
             throw new IllegalStateException("Sample rate mismatch");
         }
 
-        if (in.getSampleSizeInBits() != 16 || out.getSampleSizeInBits() != 16) {
+        if (in.getSampleSizeInBits() != 16
+                || out.getSampleSizeInBits() != 16) {
             throw new IllegalStateException("Only 16-bit PCM is supported");
         }
 
         if (in.getChannels() != out.getChannels()) {
             throw new IllegalStateException("Channel count mismatch");
-        }
-
-        if (in.getFrameSize() != out.getFrameSize()) {
-            throw new IllegalStateException("Frame size mismatch");
-        }
-
-        if (in.getFrameRate() != out.getFrameRate()) {
-            throw new IllegalStateException("Frame rate mismatch");
         }
 
         if (in.isBigEndian() != out.isBigEndian()) {

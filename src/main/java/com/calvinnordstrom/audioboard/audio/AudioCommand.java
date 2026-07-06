@@ -3,5 +3,8 @@ package com.calvinnordstrom.audioboard.audio;
 public sealed interface AudioCommand permits
         PlaySampleCommand,
         StopSampleCommand,
-        StopAllSoundsCommand {
+        StopAllSoundsCommand,
+        ChangeInputCommand,
+        ChangeOutputCommand {
+    void execute(AbstractAudioMixer mixer);
 }

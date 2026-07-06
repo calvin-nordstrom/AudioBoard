@@ -42,6 +42,14 @@ public abstract class AbstractAudioMixer {
         activeSounds.clear();
     }
 
+    public void setInput(AudioInput input) {
+        throw new UnsupportedOperationException("Mixer does not support input devices.");
+    }
+
+    public void setOutput(AudioOutput output) {
+        throw new UnsupportedOperationException("Mixer does not support output devices.");
+    }
+
     protected void decodePcm16(
             byte[] bytes,
             int bytesRead,

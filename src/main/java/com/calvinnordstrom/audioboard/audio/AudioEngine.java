@@ -52,20 +52,8 @@ public class AudioEngine {
     private void commandLoop() {
         while (running) {
             try {
-                AudioCommand cmd = commandQueue.take();
-
-                switch (cmd) {
-                    case PlaySampleCommand(Sound sound) -> {
-                        SoundAsset soundAsset = sound.getSoundAsset();
-                        float volume = sound.getVolume();
-
-                        mixer.addSound(soundAsset, volume);
-                    }
-                    case StopSampleCommand(Sound sound) -> mixer.stopSound(sound.getSoundAsset());
-                    case StopAllSoundsCommand stopAllSoundsCommand -> mixer.stopAllSounds();
-                    default -> {
-                    }
-                }
+                AudioCommand command = commandQueue.take();
+                command.execute(mixer);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
