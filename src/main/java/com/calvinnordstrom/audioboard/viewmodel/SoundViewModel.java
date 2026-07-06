@@ -42,28 +42,28 @@ public class SoundViewModel {
     private void bindBackToModel() {
         name.addListener((_, oldValue, newValue) -> {
             model.setName(newValue);
-            onChanged.accept(new Change<>(model, "name", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getName(), "name", oldValue, newValue));
         });
         iconFile.addListener((_, oldValue, newValue) -> {
             model.setIconFile(newValue);
-            onChanged.accept(new Change<>(model, "iconFile", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getIconFile(), "iconFile", oldValue, newValue));
         });
         soundFile.addListener((_, oldValue, newValue) -> {
             model.setSoundFile(newValue);
             model.reloadSound();
-            onChanged.accept(new Change<>(model, "soundFile", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getSoundFile(), "soundFile", oldValue, newValue));
         });
         inputBinding.addListener((_, oldValue, newValue) -> {
             model.setInputBinding(newValue);
-            onChanged.accept(new Change<>(model, "inputBinding", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getInputBinding(), "inputBinding", oldValue, newValue));
         });
         volume.addListener((_, oldValue, newValue) -> {
             model.setVolume(newValue.floatValue());
-            onChanged.accept(new Change<>(model, "volume", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getVolume(), "volume", oldValue, newValue));
         });
         enabled.addListener((_, oldValue, newValue) -> {
             model.setEnabled(newValue);
-            onChanged.accept(new Change<>(model, "enabled", oldValue, newValue));
+            onChanged.accept(new Change<>(model.isEnabled(), "enabled", oldValue, newValue));
         });
     }
 

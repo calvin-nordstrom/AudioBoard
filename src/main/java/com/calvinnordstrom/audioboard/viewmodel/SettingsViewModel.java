@@ -32,19 +32,19 @@ public class SettingsViewModel {
     private void bindBackToModel() {
         stopSoundsBinding.addListener((_, oldValue, newValue) -> {
             model.setStopSoundsBinding(newValue);
-            onChanged.accept(new Change<>(model, "stopSoundsBinding", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getStopSoundsBinding(), "stopSoundsBinding", oldValue, newValue));
         });
         localPlaybackEnabled.addListener((_, oldValue, newValue) -> {
             model.setLocalPlaybackEnabled(newValue);
-            onChanged.accept(new Change<>(model, "localPlaybackEnabled", oldValue, newValue));
+            onChanged.accept(new Change<>(model.isLocalPlaybackEnabled(), "localPlaybackEnabled", oldValue, newValue));
         });
         inputDevice.addListener((_, oldValue, newValue) -> {
             model.setInputDevice(newValue);
-            onChanged.accept(new Change<>(model, "inputDevice", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getInputDevice(), "inputDevice", oldValue, newValue));
         });
         outputDevice.addListener((_, oldValue, newValue) -> {
             model.setOutputDevice(newValue);
-            onChanged.accept(new Change<>(model, "outputDevice", oldValue, newValue));
+            onChanged.accept(new Change<>(model.getOutputDevice(), "outputDevice", oldValue, newValue));
         });
     }
 
