@@ -1,4 +1,7 @@
-package com.calvinnordstrom.audioboard.audio;
+package com.calvinnordstrom.audioboard.audio.command;
+
+import com.calvinnordstrom.audioboard.audio.AbstractAudioMixer;
+import com.calvinnordstrom.audioboard.audio.AudioOutput;
 
 public record ChangeOutputCommand(AudioOutput output) implements AudioCommand {
 

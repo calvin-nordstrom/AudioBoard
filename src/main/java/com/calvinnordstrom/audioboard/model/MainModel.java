@@ -1,6 +1,8 @@
 package com.calvinnordstrom.audioboard.model;
 
 import com.calvinnordstrom.audioboard.audio.*;
+import com.calvinnordstrom.audioboard.audio.command.ChangeInputCommand;
+import com.calvinnordstrom.audioboard.audio.command.ChangeOutputCommand;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputHandler;
 

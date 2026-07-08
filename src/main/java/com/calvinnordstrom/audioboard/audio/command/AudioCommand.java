@@ -1,4 +1,6 @@
-package com.calvinnordstrom.audioboard.audio;
+package com.calvinnordstrom.audioboard.audio.command;
+
+import com.calvinnordstrom.audioboard.audio.*;
 
 public sealed interface AudioCommand permits
         PlaySampleCommand,

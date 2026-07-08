@@ -1,9 +1,9 @@
 package com.calvinnordstrom.audioboard.model;
 
 import com.calvinnordstrom.audioboard.audio.AudioEngine;
-import com.calvinnordstrom.audioboard.audio.PlaySampleCommand;
+import com.calvinnordstrom.audioboard.audio.command.PlaySampleCommand;
 import com.calvinnordstrom.audioboard.audio.Sound;
-import com.calvinnordstrom.audioboard.audio.StopAllSoundsCommand;
+import com.calvinnordstrom.audioboard.audio.command.StopAllSoundsCommand;
 import com.calvinnordstrom.audioboard.input.Input;
 import com.calvinnordstrom.audioboard.input.InputBinding;
 

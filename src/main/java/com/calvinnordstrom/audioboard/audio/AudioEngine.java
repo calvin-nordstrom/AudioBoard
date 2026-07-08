@@ -1,5 +1,7 @@
 package com.calvinnordstrom.audioboard.audio;
 
+import com.calvinnordstrom.audioboard.audio.command.AudioCommand;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
